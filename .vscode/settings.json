@@ -1,0 +1,7 @@
+{
+    "elm.compiler": "./node_modules/.bin/elm",
+    "elm.makeCommand": "./node_modules/.bin/elm-make",
+    "elm.formatCommand": "./node_modules/.bin/elm-format",
+    "python.formatting.provider": "black",
+    "python.pythonPath": "/usr/bin/python"
+}
