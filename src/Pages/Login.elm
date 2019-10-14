@@ -95,7 +95,7 @@ view model =
             , Input.text Theme.input
                 { label = Input.labelAbove [] (text "Password")
                 , onChange = PasswordChanged
-                , placeholder = Nothing
+                , placeholder = Just (Input.placeholder [] (text "Password"))
                 , text = (getForm model).password
                 }
             , Input.button
