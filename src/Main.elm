@@ -2,6 +2,7 @@ module Main exposing (Model, Msg(..), init, main, update, view)
 
 import Backend exposing (Participant, getParticipants)
 import Browser
+import Browser.Navigation as Nav
 import Components.Main as Main_
 import Dict exposing (Dict)
 import Element exposing (column, layout, row, text)
@@ -11,17 +12,20 @@ import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import List
 import Pages.Login as Login
+import Pages.NotFound as NotFound
+import Route
+import Url
 
 
 main : Program () Model Msg
 main =
     Browser.application
-        { init = \f url navkey -> ( init, Cmd.none )
+        { init = init
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
-        , onUrlChange = \u -> UrlChanged
-        , onUrlRequest = \l -> LinkClicked
+        , onUrlChange = UrlChanged
+        , onUrlRequest = UrlRequested
         }
 
 
@@ -31,11 +35,12 @@ main =
 
 type Model
     = LoginModel Login.Model
+    | PageNotFound
 
 
-init : Model
-init =
-    LoginModel Login.init
+init : flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url navkey =
+    changeRouteTo (Route.toRoute <| Url.toString url) PageNotFound
 
 
 
@@ -43,18 +48,18 @@ init =
 
 
 type Msg
-    = UrlChanged
-    | LinkClicked
+    = UrlChanged Url.Url
+    | UrlRequested Browser.UrlRequest
     | LoginMsg Login.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
-        ( UrlChanged, _ ) ->
-            ( model, Cmd.none )
+        ( UrlChanged url, _ ) ->
+            changeRouteTo (Route.toRoute <| Url.toString url) model
 
-        ( LinkClicked, _ ) ->
+        ( UrlRequested _, _ ) ->
             ( model, Cmd.none )
 
         ( LoginMsg subMsg, LoginModel subModel ) ->
@@ -63,6 +68,19 @@ update msg model =
                     Login.update subModel subMsg
             in
             ( LoginModel subModel_, Cmd.map LoginMsg subCmd )
+
+        ( _, PageNotFound ) ->
+            ( model, Cmd.none )
+
+
+changeRouteTo : Route.Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo route model =
+    case route of
+        Route.Login ->
+            ( LoginModel Login.init, Cmd.none )
+
+        Route.NotFound ->
+            ( PageNotFound, Cmd.none )
 
 
 
@@ -76,5 +94,8 @@ view model =
         [ case model of
             LoginModel subModel ->
                 Html.map LoginMsg (Login.view subModel)
+
+            PageNotFound ->
+                NotFound.view
         ]
     }

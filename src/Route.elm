@@ -1,4 +1,4 @@
-module Router exposing (toRoute)
+module Route exposing (Route(..), toRoute)
 
 import Browser.Navigation as Nav
 import Url
