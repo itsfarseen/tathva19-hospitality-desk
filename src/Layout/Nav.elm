@@ -19,4 +19,11 @@ view activePage redirectFn =
 
 navElement : Page -> Bool -> (Page -> msg) -> Element msg
 navElement targetPage isActive redirectFn =
-    Element.el [ onMouseDown (redirectFn targetPage) ] (text (Pages.getTitle targetPage))
+    Input.button
+        (if isActive then
+            [ Font.underline ]
+
+         else
+            []
+        )
+        { label = text (Pages.getTitle targetPage), onPress = Just (redirectFn targetPage) }
