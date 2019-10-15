@@ -1,4 +1,4 @@
-module Pages exposing (Page(..), allowedAuthStates, fromUrl, toUrl)
+module Pages exposing (Page(..), allowedPages, fromUrl, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
@@ -41,12 +41,11 @@ toUrl page =
     "#/" ++ String.join "/" pieces
 
 
-allowedAuthStates : Page -> Maybe AppState.Auth
-allowedAuthStates page =
-    -- Nothing means allowed everywhere
-    case page of
-        Login ->
-            Just AppState.LoggedOut
+allowedPages : AppState.Auth -> List Page
+allowedPages authState =
+    case authState of
+        AppState.LoggedIn _ ->
+            [ NotFound ]
 
-        NotFound ->
-            Nothing
+        AppState.LoggedOut ->
+            [ Login, NotFound ]
