@@ -10,5 +10,5 @@ import Theme
 
 view : Element msg -> Element msg -> Element msg
 view aside main =
-    row [ Element.width Element.fill, Element.height Element.fill ]
+    row [ Element.width Element.fill, Element.height Element.fill, Element.padding 20, Element.spacing 20 ]
         [ aside, main ]
