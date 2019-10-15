@@ -7,7 +7,7 @@ import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Element exposing (Element, column, layout, row, text)
 import Element.Input as Input
-import GlobalMsg exposing (GlobalMsg)
+import GlobalMsg exposing (..)
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
@@ -72,7 +72,7 @@ type Msg
     | UrlRequested Browser.UrlRequest
     | LoginMsg Login.Msg
     | DashboardMsg Dashboard.Msg
-    | RedirectToPage Pages.Page
+    | GlobalMsg GlobalMsg
 
 
 type alias PageUpdate subModel subMsg =
@@ -81,11 +81,12 @@ type alias PageUpdate subModel subMsg =
 
 updateModel : PageUpdate subModel subMsg -> (subModel -> Model) -> (subMsg -> Msg) -> ( Model, Cmd Msg )
 updateModel ( subModel, subCmd, maybeGlobalMsg ) toModel toMsg =
+    -- FIXME: This function is poorly named
     let
         ( model, cmd ) =
             case maybeGlobalMsg of
                 Just globalMsg ->
-                    updateGlobalMsg globalMsg (toModel subModel)
+                    update (GlobalMsg globalMsg) (toModel subModel)
 
                 Nothing ->
                     ( toModel subModel, Cmd.none )
@@ -102,7 +103,7 @@ update msg model =
         ( _, UrlRequested _ ) ->
             ( model, Cmd.none )
 
-        ( _, RedirectToPage page ) ->
+        ( _, GlobalMsg (RedirectToPage page) ) ->
             changeUrlTo page model
 
         ( Login subModel, LoginMsg subMsg ) ->
