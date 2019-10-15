@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn elm-live src/Main.elm -- -- --output=index.js
+yarn elm-live src/Main.elm -- -u -- --output=index.js
