@@ -4,7 +4,6 @@ import AppState exposing (AppState)
 import Backend exposing (Participant, getParticipants)
 import Browser
 import Browser.Navigation as Nav
-import Components.Main as Main_
 import Dict exposing (Dict)
 import Element exposing (column, layout, row, text)
 import Element.Input as Input
