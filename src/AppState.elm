@@ -1,6 +1,7 @@
-module AppState exposing (AppState, Auth, getAuth, getParticipants, init, setAuth, setParticipantsList)
+module AppState exposing (AppState, Auth(..), getAuth, getNavKey, getParticipants, init, setAuth, setParticipantsList)
 
 import Backend exposing (Participant)
+import Browser.Navigation as Nav
 
 
 type Token
@@ -19,12 +20,13 @@ type AppState
 type alias AppStateRecord =
     { auth : Auth
     , participants : List Participant
+    , navKey : Nav.Key
     }
 
 
-init : AppState
-init =
-    AppState (AppStateRecord LoggedOut [])
+init : Nav.Key -> AppState
+init navKey =
+    AppState (AppStateRecord LoggedOut [] navKey)
 
 
 toInner : AppState -> AppStateRecord
@@ -60,3 +62,8 @@ setParticipantsList appState participants =
             toInner appState
     in
     ( AppState { record | participants = participants }, Cmd.none )
+
+
+getNavKey : AppState -> Nav.Key
+getNavKey appState =
+    .navKey <| toInner appState
