@@ -6,7 +6,9 @@ import Element exposing (Element, column, layout, row, text)
 import Element.Background
 import Element.Font as Font
 import Element.Input as Input
+import GlobalMsg exposing (GlobalMsg)
 import Html
+import Pages
 import Theme
 
 
@@ -43,9 +45,17 @@ setAppState model newAppState =
     Model { record | appState = newAppState }
 
 
-init : AppState -> Model
+init : AppState -> ( Model, Cmd Msg, Maybe GlobalMsg )
 init appState =
-    Model { billNo = "", addParticipant = "", participants = [], appState = appState }
+    ( Model { billNo = "", addParticipant = "", participants = [], appState = appState }
+    , Cmd.none
+    , case AppState.getAuth appState of
+        AppState.LoggedOut ->
+            Just (GlobalMsg.RedirectToPage Pages.Login)
+
+        _ ->
+            Nothing
+    )
 
 
 type Msg

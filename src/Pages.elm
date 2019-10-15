@@ -2,7 +2,6 @@ module Pages exposing (Page(..), fromUrl, listForNav, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
-import Pages.Dashboard as Dashboard
 import Url
 import Url.Parser exposing (Parser, map, oneOf, parse, s, top)
 

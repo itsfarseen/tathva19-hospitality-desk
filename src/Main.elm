@@ -100,8 +100,6 @@ update msg model =
 
         ( _, GlobalMsg (RedirectToPage Pages.Logout) ) ->
             let
-                -- Load page first, then changeUrl to avoid flickering
-                -- when reloading from init functions
                 ( newAppState, cmd1 ) =
                     AppState.setAuth (getAppState model) AppState.LoggedOut
 
@@ -194,7 +192,7 @@ loadPage page appState =
             ( PageNotFound appState, Cmd.none )
 
         Pages.Dashboard ->
-            ( Dashboard (Dashboard.init appState), Cmd.none )
+            updateModel (Dashboard.init appState) Dashboard DashboardMsg
 
         Pages.Logout ->
             ( Logout appState, Cmd.none )
