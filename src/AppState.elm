@@ -27,8 +27,8 @@ init =
     AppState (AppStateRecord LoggedOut [])
 
 
-getAppStateRecord : AppState -> AppStateRecord
-getAppStateRecord appState =
+toInner : AppState -> AppStateRecord
+toInner appState =
     case appState of
         AppState record ->
             record
@@ -36,19 +36,19 @@ getAppStateRecord appState =
 
 getAuth : AppState -> Auth
 getAuth appState =
-    .auth <| getAppStateRecord appState
+    .auth <| toInner appState
 
 
 getParticipants : AppState -> List Participant
 getParticipants appState =
-    .participants <| getAppStateRecord appState
+    .participants <| toInner appState
 
 
 setAuth : AppState -> Auth -> ( AppState, Cmd msg )
 setAuth appState auth =
     let
         record =
-            getAppStateRecord appState
+            toInner appState
     in
     ( AppState { record | auth = auth }, Cmd.none )
 
@@ -57,6 +57,6 @@ setParticipantsList : AppState -> List Participant -> ( AppState, Cmd msg )
 setParticipantsList appState participants =
     let
         record =
-            getAppStateRecord appState
+            toInner appState
     in
     ( AppState { record | participants = participants }, Cmd.none )
