@@ -1,4 +1,4 @@
-module Pages.NotFound exposing (view)
+module Pages.NotFound exposing (title, view)
 
 import Backend
 import Element exposing (column, layout, row, text)
@@ -7,6 +7,10 @@ import Element.Font as Font
 import Element.Input as Input
 import Html
 import Theme
+
+
+title =
+    "Error 404"
 
 
 view : Html.Html msg

@@ -1,4 +1,4 @@
-module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, update, view)
+module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
 
 import AppState exposing (AppState)
 import Backend
@@ -8,6 +8,10 @@ import Element.Font as Font
 import Element.Input as Input
 import Html
 import Theme
+
+
+title =
+    "Login"
 
 
 type Model
@@ -51,17 +55,17 @@ setAppState model newAppState =
     Model { record | appState = newAppState }
 
 
+init : AppState -> Model
+init appState =
+    Model { state = Default, form = Form "" "", appState = appState }
+
+
 type Msg
     = UserIDChanged String
     | PasswordChanged String
     | LoginClicked
     | LoginSuccess Backend.Token
     | LoginFailed
-
-
-init : AppState -> Model
-init appState =
-    Model { state = Default, form = Form "" "", appState = appState }
 
 
 update : Model -> Msg -> ( Model, Cmd Msg )
