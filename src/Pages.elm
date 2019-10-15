@@ -1,4 +1,4 @@
-module Pages exposing (Page(..), allowedPages, fromUrl, listForNav, toUrl)
+module Pages exposing (Page(..), fromUrl, listForNav, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
@@ -10,12 +10,18 @@ import Url.Parser exposing (Parser, map, oneOf, parse, s, top)
 type Page
     = Login
     | Dashboard
+    | Logout
     | NotFound
 
 
-listForNav : List Page
-listForNav =
-    [ Login, Dashboard ]
+listForNav : AppState.Auth -> List Page
+listForNav auth =
+    case auth of
+        AppState.LoggedIn _ ->
+            [ Dashboard, Logout ]
+
+        AppState.LoggedOut ->
+            [ Login ]
 
 
 fromUrl : String -> Page
@@ -30,6 +36,7 @@ fromUrl string =
                     oneOf
                         [ map Login (s "login")
                         , map Dashboard top
+                        , map Logout (s "logout")
                         ]
             in
             parse parser url
@@ -44,6 +51,9 @@ toUrl page =
                 Login ->
                     [ "login" ]
 
+                Logout ->
+                    [ "logout" ]
+
                 Dashboard ->
                     []
 
@@ -51,13 +61,3 @@ toUrl page =
                     [ "404" ]
     in
     "/" ++ String.join "/" pieces
-
-
-allowedPages : AppState.Auth -> List Page
-allowedPages authState =
-    case authState of
-        AppState.LoggedIn _ ->
-            [ Dashboard, NotFound ]
-
-        AppState.LoggedOut ->
-            [ Login, NotFound ]

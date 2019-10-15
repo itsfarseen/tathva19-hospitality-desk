@@ -17,6 +17,7 @@ import List
 import Pages
 import Pages.Dashboard as Dashboard
 import Pages.Login as Login
+import Pages.Logout as Logout
 import Pages.NotFound as NotFound
 import Url
 
@@ -40,6 +41,7 @@ main =
 type Model
     = Login Login.Model
     | PageNotFound AppState
+    | Logout AppState
     | Dashboard Dashboard.Model
 
 
@@ -96,6 +98,18 @@ update msg model =
         ( _, UrlRequested _ ) ->
             ( model, Cmd.none )
 
+        ( _, GlobalMsg (RedirectToPage Pages.Logout) ) ->
+            let
+                -- Load page first, then changeUrl to avoid flickering
+                -- when reloading from init functions
+                ( newAppState, cmd1 ) =
+                    AppState.setAuth (getAppState model) AppState.LoggedOut
+
+                ( newModel, cmd2 ) =
+                    update (GlobalMsg (RedirectToPage Pages.Login)) (setAppState model newAppState)
+            in
+            ( newModel, Cmd.batch [ cmd1, cmd2 ] )
+
         ( _, GlobalMsg (RedirectToPage page) ) ->
             let
                 -- Load page first, then changeUrl to avoid flickering
@@ -119,6 +133,9 @@ update msg model =
             updateModel (Login.update subModel subMsg) Login LoginMsg
 
         ( Login _, _ ) ->
+            ( model, Cmd.none )
+
+        ( Logout _, _ ) ->
             ( model, Cmd.none )
 
         ( Dashboard subModel, DashboardMsg subMsg ) ->
@@ -154,6 +171,9 @@ getTitle page =
         Pages.Dashboard ->
             Dashboard.title
 
+        Pages.Logout ->
+            Logout.title
+
 
 changeUrlTo : Pages.Page -> Model -> ( Model, Cmd Msg )
 changeUrlTo page model =
@@ -176,6 +196,9 @@ loadPage page appState =
         Pages.Dashboard ->
             ( Dashboard (Dashboard.init appState), Cmd.none )
 
+        Pages.Logout ->
+            ( Logout appState, Cmd.none )
+
 
 getAppState : Model -> AppState
 getAppState model =
@@ -188,6 +211,9 @@ getAppState model =
 
         Dashboard subModel ->
             Dashboard.getAppState subModel
+
+        Logout appState ->
+            appState
 
 
 setAppState : Model -> AppState -> Model
@@ -202,6 +228,9 @@ setAppState model newAppState =
         PageNotFound appState ->
             PageNotFound newAppState
 
+        Logout appState ->
+            Logout newAppState
+
 
 getPage : Model -> Pages.Page
 getPage model =
@@ -214,6 +243,9 @@ getPage model =
 
         PageNotFound _ ->
             Pages.NotFound
+
+        Logout _ ->
+            Pages.Logout
 
 
 
@@ -233,6 +265,9 @@ getPageView model =
 
         PageNotFound _ ->
             NotFound.view
+
+        Logout _ ->
+            Logout.view
 
 
 view : Model -> Browser.Document Msg

@@ -12,9 +12,7 @@ import Theme
 view : Page -> AppState.Auth -> (Page -> msg) -> (Page -> String) -> Element msg
 view activePage authState redirectFn titleFn =
     column [ Element.alignTop ]
-        (List.filter
-            (\page -> List.member page (Pages.allowedPages authState))
-            Pages.listForNav
+        (Pages.listForNav authState
             |> List.map
                 (\page -> navElement page (page == activePage) redirectFn titleFn)
         )
