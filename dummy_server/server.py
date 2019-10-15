@@ -1,7 +1,9 @@
 import flask
+from flask_cors import CORS
 from flask import jsonify, request
 
 app = flask.Flask(__name__)
+CORS(app)
 
 participants_data = [
     {
