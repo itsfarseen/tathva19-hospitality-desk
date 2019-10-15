@@ -1,4 +1,4 @@
-module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
+module Pages.Dashboard exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
 
 import AppState exposing (AppState)
 import Backend
@@ -6,14 +6,12 @@ import Element exposing (Element, column, layout, row, text)
 import Element.Background
 import Element.Font as Font
 import Element.Input as Input
-import GlobalMsg exposing (GlobalMsg)
 import Html
-import Pages
 import Theme
 
 
 title =
-    "Login"
+    "Dashboard"
 
 
 type Model
@@ -70,30 +68,24 @@ type Msg
     | LoginFailed
 
 
-update : Model -> Msg -> ( Model, Maybe GlobalMsg, Cmd Msg )
+update : Model -> Msg -> ( Model, Cmd Msg )
 update model msg =
     case msg of
         UserIDChanged userid ->
-            ( updateForm model (\form -> { form | userid = userid }), Nothing, Cmd.none )
+            ( updateForm model (\form -> { form | userid = userid }), Cmd.none )
 
         PasswordChanged password ->
-            ( updateForm model (\form -> { form | password = password }), Nothing, Cmd.none )
+            ( updateForm model (\form -> { form | password = password }), Cmd.none )
 
         LoginClicked ->
-            ( model, Nothing, Backend.login (getForm model) loginHandler )
+            ( model, Backend.login (getForm model) loginHandler )
 
         LoginSuccess token ->
-            let
-                ( newAppState, appStateCmd ) =
-                    AppState.setAuth (getAppState model) (AppState.LoggedIn token)
-
-                newModel =
-                    setAppState model newAppState
-            in
-            ( newModel, Just (GlobalMsg.RedirectToPage Pages.Dashboard), Cmd.batch [ appStateCmd ] )
+            AppState.setAuth (getAppState model) (AppState.LoggedIn token)
+                |> Tuple.mapFirst (setAppState model)
 
         LoginFailed ->
-            ( setState model LogInFailed, Nothing, Cmd.none )
+            ( setState model LogInFailed, Cmd.none )
 
 
 updateForm : Model -> (Form -> Form) -> Model
@@ -131,9 +123,8 @@ loginHandler result =
 
 view : Model -> Element Msg
 view model =
-    column
-        [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
-        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Hospitality Login")
+    column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
+        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Dashboard")
         , Input.text Theme.input
             { label = Input.labelAbove [] (text "User ID")
             , onChange = UserIDChanged

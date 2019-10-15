@@ -8,17 +8,17 @@ import Pages exposing (Page)
 import Theme
 
 
-view : Page -> (Page -> msg) -> Element msg
-view activePage redirectFn =
+view : Page -> (Page -> msg) -> (Page -> String) -> Element msg
+view activePage redirectFn titleFn =
     column [ Element.alignTop ]
         (List.map
-            (\page -> navElement page (page == activePage) redirectFn)
+            (\page -> navElement page (page == activePage) redirectFn titleFn)
             Pages.listForNav
         )
 
 
-navElement : Page -> Bool -> (Page -> msg) -> Element msg
-navElement targetPage isActive redirectFn =
+navElement : Page -> Bool -> (Page -> msg) -> (Page -> String) -> Element msg
+navElement targetPage isActive redirectFn titleFn =
     Input.button
         (if isActive then
             [ Font.underline ]
@@ -26,4 +26,4 @@ navElement targetPage isActive redirectFn =
          else
             []
         )
-        { label = text (Pages.getTitle targetPage), onPress = Just (redirectFn targetPage) }
+        { label = text (titleFn targetPage), onPress = Just (redirectFn targetPage) }

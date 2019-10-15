@@ -1,21 +1,21 @@
-module Pages exposing (Page(..), allowedPages, fromUrl, getTitle, listForNav, toUrl)
+module Pages exposing (Page(..), allowedPages, fromUrl, listForNav, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
-import Pages.Login as Login
-import Pages.NotFound as NotFound
+import Pages.Dashboard as Dashboard
 import Url
-import Url.Parser exposing (Parser, map, oneOf, parse, s)
+import Url.Parser exposing (Parser, map, oneOf, parse, s, top)
 
 
 type Page
     = Login
+    | Dashboard
     | NotFound
 
 
 listForNav : List Page
 listForNav =
-    [ Login ]
+    [ Login, Dashboard ]
 
 
 fromUrl : String -> Page
@@ -28,7 +28,9 @@ fromUrl string =
             let
                 parser =
                     oneOf
-                        [ map Login (s "login") ]
+                        [ map Login (s "login")
+                        , map Dashboard top
+                        ]
             in
             parse parser url
                 |> Maybe.withDefault NotFound
@@ -42,27 +44,20 @@ toUrl page =
                 Login ->
                     [ "login" ]
 
+                Dashboard ->
+                    []
+
                 NotFound ->
                     [ "404" ]
     in
     "/" ++ String.join "/" pieces
 
 
-getTitle : Page -> String
-getTitle page =
-    case page of
-        Login ->
-            Login.title
-
-        NotFound ->
-            NotFound.title
-
-
 allowedPages : AppState.Auth -> List Page
 allowedPages authState =
     case authState of
         AppState.LoggedIn _ ->
-            [ NotFound ]
+            [ Dashboard, NotFound ]
 
         AppState.LoggedOut ->
             [ Login, NotFound ]
