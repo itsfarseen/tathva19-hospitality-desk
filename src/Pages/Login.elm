@@ -1,7 +1,7 @@
 module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
 
 import AppState exposing (AppState)
-import Backend
+import Backend exposing (Error, LoginCreds, LoginError, Token)
 import Element exposing (Element, column, layout, row, text)
 import Element.Background
 import Element.Font as Font
@@ -57,9 +57,17 @@ setAppState model newAppState =
     Model { record | appState = newAppState }
 
 
-init : AppState -> Model
+init : AppState -> ( Model, Cmd Msg, Maybe GlobalMsg )
 init appState =
-    Model { state = Default, form = Form "" "", appState = appState }
+    ( Model { state = Default, form = Form "" "", appState = appState }
+    , Cmd.none
+    , case AppState.getAuth appState of
+        AppState.LoggedIn _ ->
+            Just (GlobalMsg.RedirectToPage Pages.Dashboard)
+
+        _ ->
+            Nothing
+    )
 
 
 type Msg
@@ -67,7 +75,7 @@ type Msg
     | PasswordChanged String
     | LoginClicked
     | LoginSuccess Backend.Token
-    | LoginFailed
+    | LoginFailed (Error LoginError)
 
 
 update : Model -> Msg -> ( Model, Cmd Msg, Maybe GlobalMsg )
@@ -92,7 +100,7 @@ update model msg =
             in
             ( newModel, Cmd.batch [ appStateCmd ], Just (GlobalMsg.RedirectToPage Pages.Dashboard) )
 
-        LoginFailed ->
+        LoginFailed _ ->
             ( setState model LogInFailed, Cmd.none, Nothing )
 
 
@@ -119,14 +127,14 @@ getForm model =
     .form <| toInner model
 
 
-loginHandler : Result Backend.Error (Maybe Backend.Token) -> Msg
+loginHandler : Result (Error LoginError) Token -> Msg
 loginHandler result =
     case result of
-        Ok (Just token) ->
+        Ok token ->
             LoginSuccess token
 
-        _ ->
-            LoginFailed
+        Err error ->
+            LoginFailed error
 
 
 view : Model -> Element Msg

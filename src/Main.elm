@@ -51,20 +51,8 @@ init flags url navkey =
 
         requestedPage =
             Pages.fromUrl <| Url.toString url
-
-        initialModel =
-            case AppState.getAuth appState of
-                AppState.LoggedIn _ ->
-                    PageNotFound appState
-
-                AppState.LoggedOut ->
-                    Login (Login.init appState)
     in
-    loadPage requestedPage initialModel
-        |> Tuple.mapSecond
-            (\cmd ->
-                Cmd.batch [ cmd, Backend.getParticipants ParticipantsDataResult ]
-            )
+    loadPage requestedPage appState
 
 
 
@@ -74,7 +62,7 @@ init flags url navkey =
 type Msg
     = UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
-    | ParticipantsDataResult (Result Backend.Error (List Participant))
+    | ParticipantsDataResult (Result (Backend.Error ()) (List Participant))
     | LoginMsg Login.Msg
     | DashboardMsg Dashboard.Msg
     | GlobalMsg GlobalMsg
@@ -103,13 +91,22 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
         ( _, UrlChanged url ) ->
-            loadPage (Pages.fromUrl <| Url.toString url) model
+            loadPage (Pages.fromUrl <| Url.toString url) (getAppState model)
 
         ( _, UrlRequested _ ) ->
             ( model, Cmd.none )
 
         ( _, GlobalMsg (RedirectToPage page) ) ->
-            changeUrlTo page model
+            let
+                -- Load page first, then changeUrl to avoid flickering
+                -- when reloading from init functions
+                ( newModel1, cmd1 ) =
+                    loadPage page (getAppState model)
+
+                ( newModel2, cmd2 ) =
+                    changeUrlTo page newModel1
+            in
+            ( newModel2, Cmd.batch [ cmd1, cmd2 ] )
 
         ( _, ParticipantsDataResult (Ok participants) ) ->
             let
@@ -167,26 +164,17 @@ changeUrlTo page model =
     ( model, Nav.pushUrl navKey (Pages.toUrl page) )
 
 
-loadPage : Pages.Page -> Model -> ( Model, Cmd Msg )
-loadPage page model =
-    let
-        -- Auth Guard: Show not found if page is not allowed in current auth state
-        pageFiltered =
-            if List.member page (Pages.allowedPages (AppState.getAuth (getAppState model))) then
-                page
-
-            else
-                Pages.NotFound
-    in
-    case pageFiltered of
+loadPage : Pages.Page -> AppState -> ( Model, Cmd Msg )
+loadPage page appState =
+    case page of
         Pages.Login ->
-            ( Login (Login.init <| getAppState model), Cmd.none )
+            updateModel (Login.init appState) Login LoginMsg
 
         Pages.NotFound ->
-            ( PageNotFound <| getAppState model, Cmd.none )
+            ( PageNotFound appState, Cmd.none )
 
         Pages.Dashboard ->
-            ( Dashboard (Dashboard.init <| getAppState model), Cmd.none )
+            ( Dashboard (Dashboard.init appState), Cmd.none )
 
 
 getAppState : Model -> AppState
