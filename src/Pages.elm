@@ -1,4 +1,4 @@
-module Pages exposing (Page(..), allowedPages, fromUrl, getTitle, toUrl)
+module Pages exposing (Page(..), allowedPages, fromUrl, getTitle, listForNav, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
@@ -11,6 +11,11 @@ import Url.Parser exposing (Parser, map, oneOf, parse, s)
 type Page
     = Login
     | NotFound
+
+
+listForNav : List Page
+listForNav =
+    [ Login ]
 
 
 fromUrl : String -> Page
@@ -40,7 +45,7 @@ toUrl page =
                 NotFound ->
                     [ "404" ]
     in
-    "#/" ++ String.join "/" pieces
+    "/" ++ String.join "/" pieces
 
 
 getTitle : Page -> String

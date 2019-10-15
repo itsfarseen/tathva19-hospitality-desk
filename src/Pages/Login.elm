@@ -2,7 +2,7 @@ module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, title, 
 
 import AppState exposing (AppState)
 import Backend
-import Element exposing (column, layout, row, text)
+import Element exposing (Element, column, layout, row, text)
 import Element.Background
 import Element.Font as Font
 import Element.Input as Input
@@ -121,28 +121,27 @@ loginHandler result =
             LoginFailed
 
 
-view : Model -> Html.Html Msg
+view : Model -> Element Msg
 view model =
-    layout [] <|
-        column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
-            [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Hospitality Login")
-            , Input.text Theme.input
-                { label = Input.labelAbove [] (text "User ID")
-                , onChange = UserIDChanged
-                , placeholder = Just (Input.placeholder [] (text "UserID"))
-                , text = (getForm model).userid
-                }
-            , Input.text Theme.input
-                { label = Input.labelAbove [] (text "Password")
-                , onChange = PasswordChanged
-                , placeholder = Just (Input.placeholder [] (text "Password"))
-                , text = (getForm model).password
-                }
-            , Input.button
-                (Theme.button
-                    ++ [ Element.alignRight ]
-                )
-                { label = Element.el [ Element.centerX ] (text "Login")
-                , onPress = Just LoginClicked
-                }
-            ]
+    column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
+        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Hospitality Login")
+        , Input.text Theme.input
+            { label = Input.labelAbove [] (text "User ID")
+            , onChange = UserIDChanged
+            , placeholder = Just (Input.placeholder [] (text "UserID"))
+            , text = (getForm model).userid
+            }
+        , Input.text Theme.input
+            { label = Input.labelAbove [] (text "Password")
+            , onChange = PasswordChanged
+            , placeholder = Just (Input.placeholder [] (text "Password"))
+            , text = (getForm model).password
+            }
+        , Input.button
+            (Theme.button
+                ++ [ Element.alignRight ]
+            )
+            { label = Element.el [ Element.centerX ] (text "Login")
+            , onPress = Just LoginClicked
+            }
+        ]

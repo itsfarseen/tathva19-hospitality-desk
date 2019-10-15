@@ -5,11 +5,13 @@ import Backend exposing (Participant, getParticipants)
 import Browser
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
-import Element exposing (column, layout, row, text)
+import Element exposing (Element, column, layout, row, text)
 import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Layout.Main as MainLayout
+import Layout.Nav as NavLayout
 import List
 import Pages
 import Pages.Login as Login
@@ -66,6 +68,7 @@ type Msg
     = UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
     | LoginMsg Login.Msg
+    | RedirectToPage Pages.Page
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -76,6 +79,9 @@ update msg model =
 
         ( _, UrlRequested _ ) ->
             ( model, Cmd.none )
+
+        ( _, RedirectToPage page ) ->
+            changeUrlTo page model
 
         ( Login subModel, LoginMsg subMsg ) ->
             let
@@ -141,16 +147,20 @@ getPage model =
 -- VIEW
 
 
+getPageView : Model -> Element Msg
+getPageView model =
+    case model of
+        Login subModel ->
+            Login.view subModel
+                |> Element.map LoginMsg
+
+        PageNotFound _ ->
+            NotFound.view
+
+
 view : Model -> Browser.Document Msg
 view model =
     { title = "Hospitality | " ++ (getPage model |> Pages.getTitle)
     , body =
-        [ case model of
-            Login subModel ->
-                Login.view subModel
-                    |> Html.map LoginMsg
-
-            PageNotFound _ ->
-                NotFound.view
-        ]
+        [ layout [] <| MainLayout.view (NavLayout.view (getPage model) RedirectToPage) (getPageView model) ]
     }
