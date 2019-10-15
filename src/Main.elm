@@ -127,13 +127,23 @@ setAppState model newAppState =
             PageNotFound newAppState
 
 
+getPage : Model -> Pages.Page
+getPage model =
+    case model of
+        Login _ ->
+            Pages.Login
+
+        PageNotFound _ ->
+            Pages.NotFound
+
+
 
 -- VIEW
 
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "Hospitality Admin"
+    { title = "Hospitality | " ++ (getPage model |> Pages.getTitle)
     , body =
         [ case model of
             Login subModel ->
