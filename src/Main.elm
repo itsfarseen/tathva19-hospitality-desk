@@ -239,5 +239,13 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Hospitality | " ++ (getPage model |> getTitle)
     , body =
-        [ layout [] <| MainLayout.view (NavLayout.view (getPage model) RedirectToPage getTitle) (getPageView model) ]
+        [ layout [] <|
+            MainLayout.view
+                (NavLayout.view
+                    (getPage model)
+                    (GlobalMsg << RedirectToPage)
+                    getTitle
+                )
+                (getPageView model)
+        ]
     }
