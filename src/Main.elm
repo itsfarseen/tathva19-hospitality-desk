@@ -70,21 +70,21 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model ) of
-        ( UrlChanged url, _ ) ->
+    case ( model, msg ) of
+        ( _, UrlChanged url ) ->
             loadPage (Pages.fromUrl <| Url.toString url) model
 
-        ( UrlRequested _, _ ) ->
+        ( _, UrlRequested _ ) ->
             ( model, Cmd.none )
 
-        ( LoginMsg subMsg, Login subModel ) ->
+        ( Login subModel, LoginMsg subMsg ) ->
             let
                 ( subModel_, subCmd ) =
                     Login.update subModel subMsg
             in
             ( Login subModel_, Cmd.map LoginMsg subCmd )
 
-        ( _, PageNotFound _ ) ->
+        ( PageNotFound _, _ ) ->
             ( model, Cmd.none )
 
 
