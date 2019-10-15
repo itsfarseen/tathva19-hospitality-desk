@@ -243,6 +243,7 @@ view model =
             MainLayout.view
                 (NavLayout.view
                     (getPage model)
+                    (AppState.getAuth (getAppState model))
                     (GlobalMsg << RedirectToPage)
                     getTitle
                 )

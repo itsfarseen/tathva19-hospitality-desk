@@ -1,5 +1,6 @@
 module Layout.Nav exposing (..)
 
+import AppState
 import Element exposing (Element, column, text)
 import Element.Events exposing (onMouseDown)
 import Element.Font as Font
@@ -8,12 +9,14 @@ import Pages exposing (Page)
 import Theme
 
 
-view : Page -> (Page -> msg) -> (Page -> String) -> Element msg
-view activePage redirectFn titleFn =
+view : Page -> AppState.Auth -> (Page -> msg) -> (Page -> String) -> Element msg
+view activePage authState redirectFn titleFn =
     column [ Element.alignTop ]
-        (List.map
-            (\page -> navElement page (page == activePage) redirectFn titleFn)
+        (List.filter
+            (\page -> List.member page (Pages.allowedPages authState))
             Pages.listForNav
+            |> List.map
+                (\page -> navElement page (page == activePage) redirectFn titleFn)
         )
 
 
