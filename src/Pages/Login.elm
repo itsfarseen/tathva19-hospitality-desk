@@ -70,17 +70,17 @@ type Msg
     | LoginFailed
 
 
-update : Model -> Msg -> ( Model, Maybe GlobalMsg, Cmd Msg )
+update : Model -> Msg -> ( Model, Cmd Msg, Maybe GlobalMsg )
 update model msg =
     case msg of
         UserIDChanged userid ->
-            ( updateForm model (\form -> { form | userid = userid }), Nothing, Cmd.none )
+            ( updateForm model (\form -> { form | userid = userid }), Cmd.none, Nothing )
 
         PasswordChanged password ->
-            ( updateForm model (\form -> { form | password = password }), Nothing, Cmd.none )
+            ( updateForm model (\form -> { form | password = password }), Cmd.none, Nothing )
 
         LoginClicked ->
-            ( model, Nothing, Backend.login (getForm model) loginHandler )
+            ( model, Backend.login (getForm model) loginHandler, Nothing )
 
         LoginSuccess token ->
             let
@@ -90,10 +90,10 @@ update model msg =
                 newModel =
                     setAppState model newAppState
             in
-            ( newModel, Just (GlobalMsg.RedirectToPage Pages.Dashboard), Cmd.batch [ appStateCmd ] )
+            ( newModel, Cmd.batch [ appStateCmd ], Just (GlobalMsg.RedirectToPage Pages.Dashboard) )
 
         LoginFailed ->
-            ( setState model LogInFailed, Nothing, Cmd.none )
+            ( setState model LogInFailed, Cmd.none, Nothing )
 
 
 updateForm : Model -> (Form -> Form) -> Model

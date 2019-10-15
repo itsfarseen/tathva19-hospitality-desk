@@ -75,6 +75,24 @@ type Msg
     | RedirectToPage Pages.Page
 
 
+type alias PageUpdate subModel subMsg =
+    ( subModel, Cmd subMsg, Maybe GlobalMsg )
+
+
+updateModel : PageUpdate subModel subMsg -> (subModel -> Model) -> (subMsg -> Msg) -> ( Model, Cmd Msg )
+updateModel ( subModel, subCmd, maybeGlobalMsg ) toModel toMsg =
+    let
+        ( model, cmd ) =
+            case maybeGlobalMsg of
+                Just globalMsg ->
+                    updateGlobalMsg globalMsg (toModel subModel)
+
+                Nothing ->
+                    ( toModel subModel, Cmd.none )
+    in
+    ( model, Cmd.batch [ Cmd.map toMsg subCmd, cmd ] )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( model, msg ) of
@@ -88,19 +106,7 @@ update msg model =
             changeUrlTo page model
 
         ( Login subModel, LoginMsg subMsg ) ->
-            let
-                ( updatedSubModel, maybeGlobalMsg, subCmd ) =
-                    Login.update subModel subMsg
-
-                ( updatedModel, cmd ) =
-                    case maybeGlobalMsg of
-                        Just globalMsg ->
-                            handleGlobalMsg globalMsg (Login updatedSubModel)
-
-                        Nothing ->
-                            ( Login updatedSubModel, Cmd.none )
-            in
-            ( updatedModel, Cmd.batch [ Cmd.map LoginMsg subCmd, cmd ] )
+            updateModel (Login.update subModel subMsg) Login LoginMsg
 
         ( Login _, _ ) ->
             ( model, Cmd.none )
@@ -119,8 +125,8 @@ update msg model =
             ( model, Cmd.none )
 
 
-handleGlobalMsg : GlobalMsg -> Model -> ( Model, Cmd Msg )
-handleGlobalMsg globalMsg model =
+updateGlobalMsg : GlobalMsg -> Model -> ( Model, Cmd Msg )
+updateGlobalMsg globalMsg model =
     case globalMsg of
         GlobalMsg.RedirectToPage page ->
             changeUrlTo page model
