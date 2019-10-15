@@ -45,8 +45,8 @@ init flags url navkey =
         appState =
             AppState.init navkey
 
-        requestedRoute =
-            Route.toRoute <| Url.toString url
+        requestedPage =
+            Pages.fromUrl <| Url.toString url
 
         initialModel =
             case AppState.getAuth appState of
@@ -56,7 +56,7 @@ init flags url navkey =
                 AppState.LoggedOut ->
                     Login (Login.init appState)
     in
-    ( initialModel, Cmd.none )
+    loadPage requestedPage initialModel
 
 
 
@@ -73,7 +73,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         ( UrlChanged url, _ ) ->
-            loadRoute (Route.toRoute <| Url.toString url) model
+            loadPage (Pages.fromUrl <| Url.toString url) model
 
         ( UrlRequested _, _ ) ->
             ( model, Cmd.none )
@@ -89,22 +89,22 @@ update msg model =
             ( model, Cmd.none )
 
 
-changeRouteTo : Route.Route -> Model -> ( Model, Cmd Msg )
-changeRouteTo route model =
+changePageTo : Pages.Page -> Model -> ( Model, Cmd Msg )
+changePageTo page model =
     let
         navKey =
             AppState.getNavKey (getAppState model)
     in
-    ( model, Route.redirectTo navKey route )
+    ( model, Nav.pushUrl navKey (Pages.toUrl page) )
 
 
-loadRoute : Route.Route -> Model -> ( Model, Cmd Msg )
-loadRoute route model =
-    case route of
-        Route.Login ->
+loadPage : Pages.Page -> Model -> ( Model, Cmd Msg )
+loadPage page model =
+    case page of
+        Pages.Login ->
             ( Login (Login.init <| getAppState model), Cmd.none )
 
-        Route.NotFound ->
+        Pages.NotFound ->
             ( PageNotFound <| getAppState model, Cmd.none )
 
 
