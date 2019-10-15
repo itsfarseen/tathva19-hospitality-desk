@@ -1,4 +1,4 @@
-module Components.Theme exposing (..)
+module Theme exposing (..)
 
 import Element exposing (column, layout, rgb255, row, text)
 import Element.Background as Background

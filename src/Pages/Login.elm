@@ -2,12 +2,12 @@ module Pages.Login exposing (Model, Msg, getAppState, init, update, view)
 
 import AppState exposing (AppState)
 import Backend
-import Components.Theme as Theme
 import Element exposing (column, layout, row, text)
 import Element.Background
 import Element.Font as Font
 import Element.Input as Input
 import Html
+import Theme
 
 
 type Model

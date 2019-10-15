@@ -1,12 +1,12 @@
 module Pages.NotFound exposing (view)
 
 import Backend
-import Components.Theme as Theme
 import Element exposing (column, layout, row, text)
 import Element.Background
 import Element.Font as Font
 import Element.Input as Input
 import Html
+import Theme
 
 
 view : Html.Html msg
