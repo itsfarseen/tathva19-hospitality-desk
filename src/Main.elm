@@ -88,8 +88,8 @@ update msg model =
             ( model, Cmd.none )
 
 
-changePageTo : Pages.Page -> Model -> ( Model, Cmd Msg )
-changePageTo page model =
+changeUrlTo : Pages.Page -> Model -> ( Model, Cmd Msg )
+changeUrlTo page model =
     let
         navKey =
             AppState.getNavKey (getAppState model)
@@ -115,6 +115,16 @@ getAppState model =
 
         PageNotFound appState ->
             appState
+
+
+setAppState : Model -> AppState -> Model
+setAppState model newAppState =
+    case model of
+        Login subModel ->
+            Login (Login.setAppState subModel newAppState)
+
+        PageNotFound appState ->
+            PageNotFound newAppState
 
 
 
