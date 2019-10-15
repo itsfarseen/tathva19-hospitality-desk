@@ -1,5 +1,6 @@
-module Pages.Login exposing (Model, Msg, init, update, view)
+module Pages.Login exposing (Model, Msg, getAppState, init, update, view)
 
+import AppState exposing (AppState)
 import Backend
 import Components.Theme as Theme
 import Element exposing (column, layout, row, text)
@@ -7,6 +8,14 @@ import Element.Background
 import Element.Font as Font
 import Element.Input as Input
 import Html
+
+
+type Model
+    = Model ModelRecord -- As an opaque type
+
+
+type alias ModelRecord =
+    { state : State, form : Form, appState : AppState }
 
 
 type alias Form =
@@ -21,8 +30,16 @@ type State
     | LogInFailed
 
 
-type alias Model =
-    ( State, Form )
+toInner : Model -> ModelRecord
+toInner model =
+    case model of
+        Model record ->
+            record
+
+
+getAppState : Model -> AppState
+getAppState model =
+    .appState <| toInner model
 
 
 type Msg
@@ -33,9 +50,9 @@ type Msg
     | LoginFailed
 
 
-init : Model
-init =
-    ( Default, Form "" "" )
+init : AppState -> Model
+init appState =
+    Model { state = Default, form = Form "" "", appState = appState }
 
 
 update : Model -> Msg -> ( Model, Cmd Msg )
@@ -59,16 +76,25 @@ update model msg =
 
 updateForm : Model -> (Form -> Form) -> Model
 updateForm model updater =
-    Tuple.mapSecond updater model
+    let
+        record =
+            toInner model
+    in
+    Model { record | form = updater record.form }
 
 
 updateState : Model -> State -> Model
 updateState model newState =
-    Tuple.mapFirst (\oldState -> newState) model
+    let
+        record =
+            toInner model
+    in
+    Model { record | state = newState }
 
 
+getForm : Model -> Form
 getForm model =
-    Tuple.second model
+    .form <| toInner model
 
 
 loginHandler : Result Backend.Error (Maybe Backend.Token) -> Msg
