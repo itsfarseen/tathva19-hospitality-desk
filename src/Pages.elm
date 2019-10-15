@@ -1,4 +1,4 @@
-module Pages exposing (Page, allowedAuthStates, fromUrl, toUrl)
+module Pages exposing (Page(..), allowedAuthStates, fromUrl, toUrl)
 
 import AppState
 import Browser.Navigation as Nav
