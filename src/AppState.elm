@@ -1,11 +1,7 @@
 module AppState exposing (AppState, Auth(..), getAuth, getNavKey, getParticipants, init, setAuth, setParticipantsList)
 
-import Backend exposing (Participant)
+import Backend exposing (Participant, Token)
 import Browser.Navigation as Nav
-
-
-type Token
-    = String
 
 
 type Auth

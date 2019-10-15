@@ -46,7 +46,7 @@ type Msg
     = UserIDChanged String
     | PasswordChanged String
     | LoginClicked
-    | LoginSuccess
+    | LoginSuccess Backend.Token
     | LoginFailed
 
 
