@@ -80,7 +80,7 @@ update model msg =
             ( updateForm model (\form -> { form | password = password }), Cmd.none, Nothing )
 
         LoginClicked ->
-            ( model, Backend.login (getForm model) loginHandler, Nothing )
+            ( setState model LoggingIn, Backend.login (getForm model) loginHandler, Nothing )
 
         LoginSuccess token ->
             let
@@ -146,11 +146,22 @@ view model =
             , placeholder = Just (Input.placeholder [] (text "Password"))
             , text = (getForm model).password
             }
-        , Input.button
-            (Theme.button
-                ++ [ Element.alignRight ]
-            )
-            { label = Element.el [ Element.centerX ] (text "Login")
-            , onPress = Just LoginClicked
-            }
+        , case (toInner model).state of
+            LoggingIn ->
+                Input.button
+                    (Theme.buttonDisabled
+                        ++ [ Element.alignRight ]
+                    )
+                    { label = Element.el [ Element.centerX ] (text "Login")
+                    , onPress = Nothing
+                    }
+
+            _ ->
+                Input.button
+                    (Theme.button
+                        ++ [ Element.alignRight ]
+                    )
+                    { label = Element.el [ Element.centerX ] (text "Login")
+                    , onPress = Just LoginClicked
+                    }
         ]

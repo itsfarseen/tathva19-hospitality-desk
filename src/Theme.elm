@@ -87,3 +87,7 @@ button =
         [ Background.color primaryLight1
         ]
     ]
+
+
+buttonDisabled =
+    button ++ [ Background.color primaryLight2, Element.mouseOver <| [], Element.mouseDown <| [] ]
