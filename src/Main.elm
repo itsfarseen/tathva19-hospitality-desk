@@ -105,7 +105,16 @@ changeUrlTo page model =
 
 loadPage : Pages.Page -> Model -> ( Model, Cmd Msg )
 loadPage page model =
-    case page of
+    let
+        -- Auth Guard: Show not found if page is not allowed in current auth state
+        pageFiltered =
+            if List.member page (Pages.allowedPages (AppState.getAuth (getAppState model))) then
+                page
+
+            else
+                Pages.NotFound
+    in
+    case pageFiltered of
         Pages.Login ->
             ( Login (Login.init <| getAppState model), Cmd.none )
 
