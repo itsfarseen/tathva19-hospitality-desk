@@ -61,6 +61,10 @@ init flags url navkey =
                     Login (Login.init appState)
     in
     loadPage requestedPage initialModel
+        |> Tuple.mapSecond
+            (\cmd ->
+                Cmd.batch [ cmd, Backend.getParticipants ParticipantsDataResult ]
+            )
 
 
 
@@ -70,6 +74,7 @@ init flags url navkey =
 type Msg
     = UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
+    | ParticipantsDataResult (Result Backend.Error (List Participant))
     | LoginMsg Login.Msg
     | DashboardMsg Dashboard.Msg
     | GlobalMsg GlobalMsg
@@ -105,6 +110,13 @@ update msg model =
 
         ( _, GlobalMsg (RedirectToPage page) ) ->
             changeUrlTo page model
+
+        ( _, ParticipantsDataResult (Ok participants) ) ->
+            let
+                ( appState, cmd ) =
+                    AppState.setParticipantsList (getAppState model) participants
+            in
+            ( setAppState model appState, cmd )
 
         ( Login subModel, LoginMsg subMsg ) ->
             updateModel (Login.update subModel subMsg) Login LoginMsg
