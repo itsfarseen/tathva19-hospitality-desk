@@ -1,7 +1,7 @@
 module Pages.Dashboard exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
 
 import AppState exposing (AppState)
-import Backend
+import Backend exposing (Participant)
 import Element exposing (Element, column, layout, row, text)
 import Element.Background
 import Element.Font as Font
@@ -19,19 +19,7 @@ type Model
 
 
 type alias ModelRecord =
-    { state : State, form : Form, appState : AppState }
-
-
-type alias Form =
-    { userid : String
-    , password : String
-    }
-
-
-type State
-    = Default
-    | LoggingIn
-    | LogInFailed
+    { billNo : String, addParticipant : String, participants : List ( Participant, String ), appState : AppState }
 
 
 toInner : Model -> ModelRecord
@@ -57,72 +45,39 @@ setAppState model newAppState =
 
 init : AppState -> Model
 init appState =
-    Model { state = Default, form = Form "" "", appState = appState }
+    Model { billNo = "", addParticipant = "", participants = [], appState = appState }
 
 
 type Msg
-    = UserIDChanged String
-    | PasswordChanged String
-    | LoginClicked
-    | LoginSuccess Backend.Token
-    | LoginFailed
+    = BillNoChanged String
+    | AddParticipantChanged String
+    | CreateBill
 
 
 update : Model -> Msg -> ( Model, Cmd Msg )
 update model msg =
     case msg of
-        UserIDChanged userid ->
-            ( updateForm model (\form -> { form | userid = userid }), Cmd.none )
+        BillNoChanged newBillNo ->
+            ( updateModel model (\form -> { form | billNo = newBillNo }), Cmd.none )
 
-        PasswordChanged password ->
-            ( updateForm model (\form -> { form | password = password }), Cmd.none )
+        AddParticipantChanged participant ->
+            ( updateModel model (\form -> { form | addParticipant = participant }), Cmd.none )
 
-        LoginClicked ->
-            ( model, Backend.login (getForm model) loginHandler )
-
-        LoginSuccess token ->
-            AppState.setAuth (getAppState model) (AppState.LoggedIn token)
-                |> Tuple.mapFirst (setAppState model)
-
-        LoginFailed ->
-            ( setState model LogInFailed, Cmd.none )
+        CreateBill ->
+            ( model, Cmd.none )
 
 
-updateForm : Model -> (Form -> Form) -> Model
-updateForm model updater =
+updateModel : Model -> (ModelRecord -> ModelRecord) -> Model
+updateModel model updater =
     let
         record =
             toInner model
     in
-    Model { record | form = updater record.form }
-
-
-setState : Model -> State -> Model
-setState model newState =
-    let
-        record =
-            toInner model
-    in
-    Model { record | state = newState }
-
-
-getForm : Model -> Form
-getForm model =
-    .form <| toInner model
-
-
-loginHandler : Result Backend.Error (Maybe Backend.Token) -> Msg
-loginHandler result =
-    case result of
-        Ok (Just token) ->
-            LoginSuccess token
-
-        _ ->
-            LoginFailed
+    Model (updater record)
 
 
 view : Model -> Element Msg
 view model =
-    column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
-        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Dashboard")
+    column [ Element.paddingXY 20 0, Font.size 15, Element.spacing 20, Element.alignTop ]
+        [ Element.el Theme.pageTitle (text "Dashboard")
         ]
