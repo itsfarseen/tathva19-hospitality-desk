@@ -1,4 +1,4 @@
-module Pages.Login exposing (Model, Msg, getAppState, init, update, view)
+module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, update, view)
 
 import AppState exposing (AppState)
 import Backend
@@ -42,6 +42,15 @@ getAppState model =
     .appState <| toInner model
 
 
+setAppState : Model -> AppState -> Model
+setAppState model newAppState =
+    let
+        record =
+            toInner model
+    in
+    Model { record | appState = newAppState }
+
+
 type Msg
     = UserIDChanged String
     | PasswordChanged String
@@ -67,11 +76,12 @@ update model msg =
         LoginClicked ->
             ( model, Backend.login (getForm model) loginHandler )
 
-        LoginSuccess ->
-            ( model, Cmd.none )
+        LoginSuccess token ->
+            AppState.setAuth (getAppState model) (AppState.LoggedIn token)
+                |> Tuple.mapFirst (setAppState model)
 
         LoginFailed ->
-            ( updateState model LogInFailed, Cmd.none )
+            ( setState model LogInFailed, Cmd.none )
 
 
 updateForm : Model -> (Form -> Form) -> Model
@@ -83,8 +93,8 @@ updateForm model updater =
     Model { record | form = updater record.form }
 
 
-updateState : Model -> State -> Model
-updateState model newState =
+setState : Model -> State -> Model
+setState model newState =
     let
         record =
             toInner model
@@ -101,7 +111,7 @@ loginHandler : Result Backend.Error (Maybe Backend.Token) -> Msg
 loginHandler result =
     case result of
         Ok (Just token) ->
-            LoginSuccess
+            LoginSuccess token
 
         _ ->
             LoginFailed
