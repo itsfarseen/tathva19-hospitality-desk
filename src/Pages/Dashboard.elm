@@ -125,23 +125,4 @@ view : Model -> Element Msg
 view model =
     column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
         [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Dashboard")
-        , Input.text Theme.input
-            { label = Input.labelAbove [] (text "User ID")
-            , onChange = UserIDChanged
-            , placeholder = Just (Input.placeholder [] (text "UserID"))
-            , text = (getForm model).userid
-            }
-        , Input.text Theme.input
-            { label = Input.labelAbove [] (text "Password")
-            , onChange = PasswordChanged
-            , placeholder = Just (Input.placeholder [] (text "Password"))
-            , text = (getForm model).password
-            }
-        , Input.button
-            (Theme.button
-                ++ [ Element.alignRight ]
-            )
-            { label = Element.el [ Element.centerX ] (text "Login")
-            , onPress = Just LoginClicked
-            }
         ]

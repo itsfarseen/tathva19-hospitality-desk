@@ -1,4 +1,4 @@
 .mypy_cache
 elm-stuff
 node_modules
-index.html
+index.js
