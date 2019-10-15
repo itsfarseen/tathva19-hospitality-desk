@@ -2,6 +2,8 @@ module AppState exposing (AppState, Auth(..), getAuth, getNavKey, getParticipant
 
 import Backend exposing (Participant, Token)
 import Browser.Navigation as Nav
+import Json.Encode as E
+import Ports
 
 
 type Auth
@@ -20,9 +22,17 @@ type alias AppStateRecord =
     }
 
 
-init : Nav.Key -> AppState
-init navKey =
-    AppState (AppStateRecord LoggedOut [] navKey)
+init : Maybe String -> Nav.Key -> AppState
+init flags navKey =
+    let
+        flags_ =
+            Maybe.withDefault "" flags
+    in
+    if flags_ /= "" then
+        AppState (AppStateRecord (LoggedIn flags_) [] navKey)
+
+    else
+        AppState (AppStateRecord LoggedOut [] navKey)
 
 
 toInner : AppState -> AppStateRecord
@@ -48,7 +58,7 @@ setAuth appState auth =
         record =
             toInner appState
     in
-    ( AppState { record | auth = auth }, Cmd.none )
+    updateCache (AppState { record | auth = auth })
 
 
 setParticipantsList : AppState -> List Participant -> ( AppState, Cmd msg )
@@ -57,9 +67,28 @@ setParticipantsList appState participants =
         record =
             toInner appState
     in
-    ( AppState { record | participants = participants }, Cmd.none )
+    updateCache (AppState { record | participants = participants })
 
 
 getNavKey : AppState -> Nav.Key
 getNavKey appState =
     .navKey <| toInner appState
+
+
+toString : AppState -> String
+toString appState =
+    let
+        record =
+            toInner appState
+    in
+    case record.auth of
+        LoggedIn token ->
+            token
+
+        LoggedOut ->
+            ""
+
+
+updateCache : AppState -> ( AppState, Cmd msg )
+updateCache appState =
+    ( appState, Ports.cache (toString appState) )

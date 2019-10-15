@@ -21,7 +21,7 @@ import Pages.NotFound as NotFound
 import Url
 
 
-main : Program () Model Msg
+main : Program (Maybe String) Model Msg
 main =
     Browser.application
         { init = init
@@ -43,11 +43,11 @@ type Model
     | Dashboard Dashboard.Model
 
 
-init : flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init : Maybe String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navkey =
     let
         appState =
-            AppState.init navkey
+            AppState.init flags navkey
 
         requestedPage =
             Pages.fromUrl <| Url.toString url

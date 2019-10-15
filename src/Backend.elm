@@ -12,8 +12,8 @@ serverUrl =
     "http://127.0.0.1:5000/"
 
 
-type Token
-    = Token String
+type alias Token =
+    String
 
 
 type Error
@@ -49,7 +49,7 @@ login creds toMsg =
     if creds.userid == "admin" && creds.password == "admin" then
         delay 2000 <|
             toMsg <|
-                Ok (Just (Token "LoginSuccessToken"))
+                Ok (Just "LoginSuccessToken")
 
     else
         delay 2000 (toMsg (Ok Nothing))

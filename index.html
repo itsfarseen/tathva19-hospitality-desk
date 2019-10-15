@@ -11,7 +11,12 @@
     <div id="elm"></div>
     <script>
         var app = Elm.Main.init({
-            node: document.getElementById('elm')
+            node: document.getElementById('elm'),
+            flags: localStorage.getItem('cache')
+        });
+
+        app.ports.cache.subscribe(function (data) {
+            localStorage.setItem('cache', data);
         });
     </script>
 </body>
