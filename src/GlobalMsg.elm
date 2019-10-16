@@ -5,3 +5,5 @@ import Pages
 
 type GlobalMsg
     = RedirectToPage Pages.Page
+    | EnterPrintMode
+    | ExitPrintMode
