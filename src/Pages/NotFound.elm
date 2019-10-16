@@ -15,5 +15,5 @@ title =
 view : Element msg
 view =
     column [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
-        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Page not found")
+        [ Theme.title "Not Found"
         ]

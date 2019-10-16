@@ -11,11 +11,11 @@ def participants():
     return flask.send_file("nano.json")
 
 
-@app.route("/auth/admin/get-token")
+@app.route("/auth/admin/get-token", methods=["POST"])
 def login():
     status = (
-        request.form.get("userid") == "admin"
-        and request.form.get("password") == "admin"
+        request.json.get("username") == "admin"
+        and request.json.get("password") == "admin"
     )
     if status:
         return jsonify({"token": "TOKEN"})

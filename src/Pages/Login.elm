@@ -141,35 +141,20 @@ view : Model -> Element Msg
 view model =
     column
         [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
-        [ Element.el (Theme.pageTitle ++ [ Element.moveUp 20.0 ]) (text "Hospitality Login")
-        , Input.text Theme.input
-            { label = Input.labelAbove [] (text "User ID")
-            , onChange = UserIDChanged
-            , placeholder = Just (Input.placeholder [] (text "UserID"))
-            , text = (getForm model).userid
-            }
-        , Input.text Theme.input
-            { label = Input.labelAbove [] (text "Password")
-            , onChange = PasswordChanged
-            , placeholder = Just (Input.placeholder [] (text "Password"))
-            , text = (getForm model).password
-            }
-        , case (toInner model).state of
-            LoggingIn ->
-                Input.button
-                    (Theme.buttonDisabled
-                        ++ [ Element.alignRight ]
-                    )
-                    { label = Element.el [ Element.centerX ] (text "Login")
-                    , onPress = Nothing
-                    }
+        [ Theme.title "Login"
+        , Theme.inputText (Theme.labelLeft "User ID") (getForm model).userid UserIDChanged
+        , Theme.inputPassword
+            (Theme.labelLeft "Password")
+            (getForm model).password
+            PasswordChanged
+        , let
+            disabled =
+                case (toInner model).state of
+                    LoggingIn ->
+                        True
 
-            _ ->
-                Input.button
-                    (Theme.button
-                        ++ [ Element.alignRight ]
-                    )
-                    { label = Element.el [ Element.centerX ] (text "Login")
-                    , onPress = Just LoginClicked
-                    }
+                    _ ->
+                        False
+          in
+          Theme.button "Login" LoginClicked (not disabled)
         ]

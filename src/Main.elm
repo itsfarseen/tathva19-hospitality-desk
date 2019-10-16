@@ -20,6 +20,7 @@ import Pages.Dashboard as Dashboard
 import Pages.Login as Login
 import Pages.Logout as Logout
 import Pages.NotFound as NotFound
+import Theme
 import Url
 
 
@@ -29,7 +30,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         , onUrlChange = UrlChanged
         , onUrlRequest = UrlRequested
         }
@@ -85,6 +86,16 @@ type Msg
 
 type alias PageUpdate subModel subMsg =
     ( subModel, Cmd subMsg, Maybe GlobalMsg )
+
+
+subscriptions : MainModel -> Sub Msg
+subscriptions ( model, _ ) =
+    case model of
+        Dashboard subModel ->
+            Sub.map DashboardMsg (Dashboard.subscriptions subModel)
+
+        _ ->
+            Sub.none
 
 
 updateModel : PageUpdate subModel subMsg -> Display -> (subModel -> Model) -> (subMsg -> Msg) -> ( MainModel, Cmd Msg )
@@ -161,11 +172,7 @@ update msg ( model, display ) =
             ( ( model, display ), Cmd.none )
 
         ( Dashboard subModel, DashboardMsg subMsg ) ->
-            let
-                ( subModel_, subCmd ) =
-                    Dashboard.update subModel subMsg
-            in
-            ( ( Dashboard subModel_, display ), Cmd.map DashboardMsg subCmd )
+            updateModel (Dashboard.update subModel subMsg) display Dashboard DashboardMsg
 
         ( Dashboard _, _ ) ->
             ( ( model, display ), Cmd.none )
@@ -290,19 +297,20 @@ view ( model, screen ) =
     { title = "Hospitality | " ++ (getPage model |> getTitle)
     , body =
         [ layout [] <|
-            case screen of
-                Screen ->
-                    MainLayout.view
-                        (NavLayout.view
-                            (getPage model)
-                            (AppState.getAuth (getAppState model))
-                            (GlobalMsg << RedirectToPage)
-                            getTitle
-                        )
-                        (getPageView model)
+            Theme.root <|
+                case screen of
+                    Screen ->
+                        MainLayout.view
+                            (NavLayout.view
+                                (getPage model)
+                                (AppState.getAuth (getAppState model))
+                                (GlobalMsg << RedirectToPage)
+                                getTitle
+                            )
+                            (getPageView model)
 
-                Print ->
-                    PrintLayout.view
-                        (getPageView model)
+                    Print ->
+                        PrintLayout.view
+                            (getPageView model)
         ]
     }

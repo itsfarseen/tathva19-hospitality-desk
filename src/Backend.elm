@@ -7,27 +7,31 @@ module Backend exposing
     , LoginError(..)
     , NewBill
     , Participant
+    , ParticipantEx
     , QueryError(..)
     , RemoteData(..)
     , SaveError(..)
     , Token
     , getBill
+    , getParticipant
     , getParticipants
     , login
+    , progressToString
     , saveBill
     )
 
-import Http
+import Http exposing (Progress)
 import Json.Decode as D
 import Json.Encode as E
 import List
 import Process
+import Round
 import Task
 
 
 serverUrl =
-    -- "https://staging.tathva.org/"
-    "http://localhost:5000/"
+    -- "http://localhost:5000/"
+    "https://staging.tathva.org/"
 
 
 type RemoteData data error
@@ -43,8 +47,7 @@ type alias Token =
 
 type HttpError
     = NetworkError
-    | ClientError { statusCode : String, body : String }
-    | ServerError { statusCode : String, body : String }
+    | BadStatus { statusCode : String, body : String }
     | CodeError String
 
 
@@ -93,7 +96,23 @@ type alias Participant =
     , mobile : String
     , shortid : String
     , email : String
+    , tathva_pass : Bool
     }
+
+
+type alias ParticipantEx =
+    { name : String
+    , college : String
+    , mobile : String
+    , shortid : String
+    , email : String
+    , tathva_pass : Bool
+    , workshops : List Workshop
+    }
+
+
+type alias Workshop =
+    { title : String, days : String }
 
 
 type alias LoginCreds =
@@ -104,8 +123,8 @@ type alias LoginCreds =
 -- PUBLIC FUNCTIONS
 
 
-getParticipants : Token -> (Result (Error ()) (List Participant) -> msg) -> Cmd msg
-getParticipants token toMsg =
+getParticipants : Token -> (Result (Error ()) (List Participant) -> msg) -> Maybe String -> Cmd msg
+getParticipants token toMsg progressTracker =
     Http.request
         { method = "GET"
         , url = serverUrl ++ "participants/nano"
@@ -115,6 +134,31 @@ getParticipants token toMsg =
                 (\code -> Nothing)
                 (D.at [ "participants" ]
                     (D.list participantDecoder)
+                )
+        , headers = [ authHeader token ]
+        , body = Http.emptyBody
+        , timeout = Nothing
+        , tracker = progressTracker
+        }
+
+
+getParticipant : Token -> (Result (Error QueryError) ParticipantEx -> msg) -> String -> Cmd msg
+getParticipant token toMsg shortid =
+    Http.request
+        { method = "GET"
+        , url = serverUrl ++ "participants/" ++ shortid
+        , expect =
+            expectJson
+                toMsg
+                (\code ->
+                    if code == 404 then
+                        Just NotFound
+
+                    else
+                        Nothing
+                )
+                (D.at [ "participant" ]
+                    participantExDecoder
                 )
         , headers = [ authHeader token ]
         , body = Http.emptyBody
@@ -194,6 +238,40 @@ login creds toMsg =
         }
 
 
+progressToString : Progress -> String
+progressToString progress =
+    case progress of
+        Http.Sending { sent, size } ->
+            bytesToString sent
+                ++ "/"
+                ++ bytesToString size
+                ++ "("
+                ++ Round.round 0 (Http.fractionSent { sent = sent, size = size } * 100)
+                ++ "% )"
+
+        Http.Receiving { received, size } ->
+            bytesToString received
+                ++ "/"
+                ++ bytesToString (Maybe.withDefault 0 size)
+                ++ "("
+                ++ Round.round 0 (Http.fractionReceived { received = received, size = size } * 100)
+                ++ "%)"
+
+
+bytesToString bytes =
+    if bytes < 1024 then
+        String.fromInt bytes ++ " B"
+
+    else if bytes < 1024 * 1024 then
+        Round.round 2 (toFloat bytes / 1024) ++ " KB"
+
+    else if bytes < 1024 * 1024 * 1024 then
+        Round.round 2 (toFloat bytes / (1024 * 1024)) ++ " MB"
+
+    else
+        Round.round 2 (toFloat bytes / (1024 * 1024 * 1024)) ++ " GB"
+
+
 
 -- DECODERS
 
@@ -204,9 +282,16 @@ loginTokenDecorder =
         (D.field "token" D.string)
 
 
+workshopDecoder : D.Decoder Workshop
+workshopDecoder =
+    D.map2 Workshop
+        (D.field "name" D.string)
+        (D.at [ "meta", "days" ] D.string)
+
+
 participantDecoder : D.Decoder Participant
 participantDecoder =
-    D.map5
+    D.map6
         Participant
         (D.field "name" D.string)
         (D.field "college" D.string)
@@ -223,6 +308,30 @@ participantDecoder =
         )
         (D.field "short_id" D.string)
         (D.field "email" D.string)
+        (D.field "tathva_pass" D.bool)
+
+
+participantExDecoder : D.Decoder ParticipantEx
+participantExDecoder =
+    D.map7
+        ParticipantEx
+        (D.field "name" D.string)
+        (D.field "college" D.string)
+        (D.maybe (D.field "mobile" D.string)
+            |> D.map
+                (\maybeMobile ->
+                    case maybeMobile of
+                        Just mobile ->
+                            mobile
+
+                        Nothing ->
+                            ""
+                )
+        )
+        (D.field "short_id" D.string)
+        (D.field "email" D.string)
+        (D.field "tathva_pass" D.bool)
+        (D.field "workshops" (D.list workshopDecoder))
 
 
 bedAssignmentDecoder : D.Decoder BedAssignment
@@ -309,11 +418,8 @@ expectJson toMsg toErr decoder =
                             if metadata.statusCode == 401 then
                                 Err <| TokenExpired
 
-                            else if metadata.statusCode // 100 == 5 then
-                                Err <| HttpError (ServerError { statusCode = String.fromInt metadata.statusCode, body = body })
-
                             else
-                                Err <| HttpError (ClientError { statusCode = String.fromInt metadata.statusCode, body = body })
+                                Err <| HttpError (BadStatus { statusCode = String.fromInt metadata.statusCode, body = body })
 
                 Http.GoodStatus_ metadata body ->
                     case D.decodeString decoder body of

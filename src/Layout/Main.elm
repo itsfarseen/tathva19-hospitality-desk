@@ -1,6 +1,7 @@
 module Layout.Main exposing (..)
 
 import Element exposing (Element, row, text)
+import Element.Background as Background
 import Element.Events exposing (onMouseDown)
 import Element.Font as Font
 import Element.Input as Input
