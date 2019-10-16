@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+     width="210mm"
+     height="297mm"
+     viewBox="0 0 210 297"
+     version="1.1"
+     id="svg8"
+     inkscape:version="0.92.4 5da689c313, 2019-01-14"
+     sodipodi:docname="ui.svg">
+    <defs
+         id="defs2" />
+    <sodipodi:namedview
+         id="base"
+         pagecolor="#343434"
+         bordercolor="#262626"
+         borderopacity="1"
+         inkscape:pageopacity="0"
+         inkscape:pageshadow="2"
+         inkscape:zoom="1"
+         inkscape:cx="292.68004"
+         inkscape:cy="574.39187"
+         inkscape:document-units="mm"
+         inkscape:current-layer="layer1"
+         showgrid="false"
+         inkscape:showpageshadow="false"
+         inkscape:window-width="679"
+         inkscape:window-height="729"
+         inkscape:window-x="683"
+         inkscape:window-y="18"
+         inkscape:window-maximized="0"
+         inkscape:snap-global="true"
+         showguides="false">
+        <inkscape:grid
+             type="xygrid"
+             id="grid832" />
+    </sodipodi:namedview>
+    <metadata
+         id="metadata5">
+        <rdf:RDF>
+            <cc:Work
+                 rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                     rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <g
+         inkscape:label="Layer 1"
+         inkscape:groupmode="layer"
+         id="layer1">
+        <rect
+             style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26417348;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect812"
+             width="373.97043"
+             height="248.78473"
+             x="-66.524223"
+             y="24.289764" />
+        <rect
+             style="opacity:1;vector-effect:none;fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect814"
+             width="71.815483"
+             height="247.95238"
+             x="-66.523811"
+             y="24.101189" />
+        <rect
+             y="98.939697"
+             x="-66.524582"
+             height="15.120588"
+             width="71.722519"
+             id="rect820"
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26345894;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <rect
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26328713;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect822"
+             width="71.628197"
+             height="15.12076"
+             x="-66.524666"
+             y="114.28545" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="-59.191074"
+             y="109.90179"
+             id="text826"><tspan
+                 sodipodi:role="line"
+                 id="tspan824"
+                 x="-59.191074"
+                 y="109.90179"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05555534px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332">DASHBOARD</tspan></text>
+        <text
+             id="text830"
+             y="123.66012"
+             x="-59.191074"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05555534px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332"
+                 y="123.66012"
+                 x="-59.191074"
+                 id="tspan828"
+                 sodipodi:role="line">LOGOUT</tspan></text>
+        <text
+             id="text836"
+             y="50.105968"
+             x="14.892264"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.11111069px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';letter-spacing:-0.05821416px;fill:#666666;stroke-width:0.26458332"
+                 y="50.105968"
+                 x="14.892264"
+                 id="tspan834"
+                 sodipodi:role="line">DASHBOARD</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.23174727;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect838"
+             width="164.13675"
+             height="197.64615"
+             x="15.538731"
+             y="66.132339" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="24.406519"
+             y="79.237"
+             id="text842"><tspan
+                 sodipodi:role="line"
+                 id="tspan840"
+                 x="24.406519"
+                 y="79.237"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05555534px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">NEW BILL</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect844"
+             width="50.24667"
+             height="11.22532"
+             x="123.13201"
+             y="71.686417" />
+        <text
+             id="text848"
+             y="78.835419"
+             x="103.79094"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="78.835419"
+                 x="103.79094"
+                 id="tspan846"
+                 sodipodi:role="line">BILL NO</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#f2f2f2;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.45737445;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect866"
+             width="163.79102"
+             height="73.652985"
+             x="15.717483"
+             y="104.5014" />
+        <rect
+             y="118.79836"
+             x="47.47324"
+             height="11.22532"
+             width="50.24667"
+             id="rect850"
+             style="opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="18.388639"
+             y="112.47835"
+             id="text854"><tspan
+                 sodipodi:role="line"
+                 id="tspan852"
+                 x="18.388639"
+                 y="112.47835"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">ADD PARTICIPANT</tspan></text>
+        <text
+             id="text858"
+             y="126.3744"
+             x="21.744568"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="126.3744"
+                 x="21.744568"
+                 id="tspan856"
+                 sodipodi:role="line">TATHVA ID</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.29036564;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect868"
+             width="23.252449"
+             height="8.6638708"
+             x="139.00597"
+             y="162.53906" />
+        <text
+             id="text872"
+             y="168.18224"
+             x="146.66309"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332"
+                 y="168.18224"
+                 x="146.66309"
+                 id="tspan870"
+                 sodipodi:role="line">ADD</tspan></text>
+        <text
+             id="text876"
+             y="123.06168"
+             x="108.34695"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="123.06168"
+                 x="108.34695"
+                 id="tspan874"
+                 sodipodi:role="line">PARTICIPANT NAME</tspan></text>
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="108.34695"
+             y="128.35336"
+             id="text880"><tspan
+                 sodipodi:role="line"
+                 id="tspan878"
+                 x="108.34695"
+                 y="128.35336"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">COLLEGE</tspan></text>
+        <text
+             id="text884"
+             y="133.64502"
+             x="108.34695"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="133.64502"
+                 x="108.34695"
+                 id="tspan882"
+                 sodipodi:role="line">MOBILE</tspan></text>
+        <text
+             id="text892"
+             y="117.77003"
+             x="108.34695"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="117.77003"
+                 x="108.34695"
+                 id="tspan890"
+                 sodipodi:role="line">T19-ASDFG</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#f2f2f2;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.31165379;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect998"
+             width="149.62427"
+             height="22.778164"
+             x="23.896"
+             y="223.29562" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="133.49586"
+             y="236.18953"
+             id="text982"><tspan
+                 sodipodi:role="line"
+                 id="tspan980"
+                 x="133.49586"
+                 y="236.18953"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">BED</tspan></text>
+        <text
+             id="text986"
+             y="236.18953"
+             x="88.078262"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="236.18953"
+                 x="88.078262"
+                 id="tspan984"
+                 sodipodi:role="line">MOBILE</tspan></text>
+        <rect
+             y="229.64561"
+             x="147.62202"
+             height="8.6638708"
+             width="23.252449"
+             id="rect1000"
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.29036564;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="151.0692"
+             y="235.66037"
+             id="text1004"><tspan
+                 sodipodi:role="line"
+                 id="tspan1002"
+                 x="151.0692"
+                 y="235.66037"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332">DELETE</tspan></text>
+        <g
+             id="g1016"
+             transform="translate(1.0478548,51.71051)">
+            <text
+                 id="text974"
+                 y="184.44502"
+                 x="28.442793"
+                 style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+                 xml:space="preserve"><tspan
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                     y="184.44502"
+                     x="28.442793"
+                     id="tspan972"
+                     sodipodi:role="line">PARTICIPANT NAME</tspan></text>
+            <text
+                 xml:space="preserve"
+                 style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+                 x="28.442789"
+                 y="189.73671"
+                 id="text978"><tspan
+                     sodipodi:role="line"
+                     id="tspan976"
+                     x="28.442789"
+                     y="189.73671"
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">COLLEGE</tspan></text>
+            <text
+                 id="text1008"
+                 y="179.22131"
+                 x="28.272997"
+                 style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+                 xml:space="preserve"><tspan
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                     y="179.22131"
+                     x="28.272997"
+                     id="tspan1006"
+                     sodipodi:role="line">T19-ASDFG</tspan></text>
+        </g>
+        <text
+             id="text1020"
+             y="219.75435"
+             x="29.121866"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.29166651px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="219.75435"
+                 x="29.121866"
+                 id="tspan1018"
+                 sodipodi:role="line">PARTICIPANTS ASSIGNED</tspan></text>
+        <rect
+             y="66.061089"
+             x="190.09253"
+             height="44.908108"
+             width="107.12925"
+             id="rect1022"
+             style="opacity:1;vector-effect:none;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.08924499;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <text
+             id="text1026"
+             y="76.061996"
+             x="195.32745"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05555534px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="76.061996"
+                 x="195.32745"
+                 id="tspan1024"
+                 sodipodi:role="line">VIEW BILL</tspan></text>
+        <rect
+             y="83.347511"
+             x="230.28398"
+             height="11.18645"
+             width="63.410767"
+             id="rect1028"
+             style="opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.29718065;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="206.44931"
+             y="90.477081"
+             id="text1032"><tspan
+                 sodipodi:role="line"
+                 id="tspan1030"
+                 x="206.44931"
+                 y="90.477081"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">BILL NO</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.29036564;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect1034"
+             width="23.252449"
+             height="8.6638708"
+             x="269.89343"
+             y="98.516899" />
+        <text
+             id="text1038"
+             y="104.35365"
+             x="273.31738"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332"
+                 y="104.35365"
+                 x="273.31738"
+                 id="tspan1036"
+                 sodipodi:role="line">SEARCH</tspan></text>
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="271.20068"
+             y="157.27034"
+             id="text1060"><tspan
+                 sodipodi:role="line"
+                 id="tspan1058"
+                 x="271.20068"
+                 y="157.27034"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332">SEARCH</tspan></text>
+        <rect
+             y="118.97902"
+             x="190.09381"
+             height="47.551353"
+             width="107.12666"
+             id="rect1062"
+             style="opacity:1;vector-effect:none;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.09183276;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+        <text
+             id="text1066"
+             y="130.56613"
+             x="195.32745"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05555534px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="130.56613"
+                 x="195.32745"
+                 id="tspan1064"
+                 sodipodi:role="line">PARTICIPANTS LIST</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#7137c8;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.29267582;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect1070"
+             width="23.63022"
+             height="8.6615601"
+             x="268.83618"
+             y="152.49313" />
+        <text
+             id="text1074"
+             y="158.32874"
+             x="272.25897"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332"
+                 y="158.32874"
+                 x="272.25897"
+                 id="tspan1072"
+                 sodipodi:role="line">REFRESH</tspan></text>
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="195.86604"
+             y="143.39375"
+             id="text1078"><tspan
+                 sodipodi:role="line"
+                 id="tspan1076"
+                 x="195.86604"
+                 y="143.39375"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">LAST UPDATED: 16/10/19 08:55 AM</tspan></text>
+        <text
+             id="text1086"
+             y="74.837654"
+             x="241.16418"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#808080;stroke-width:0.26458332"
+                 y="74.837654"
+                 x="241.16418"
+                 id="tspan1084"
+                 sodipodi:role="line">FOR CHECKING/REPRINT/DEREG</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect1100"
+             width="50.24667"
+             height="11.22532"
+             x="46.77755"
+             y="146.47354" />
+        <text
+             id="text1104"
+             y="153.62254"
+             x="23.203136"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="153.62254"
+                 x="23.203136"
+                 id="tspan1102"
+                 sodipodi:role="line">HOSTEL</tspan></text>
+        <rect
+             style="opacity:1;vector-effect:none;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             id="rect1106"
+             width="50.24667"
+             height="11.22532"
+             x="47.064579"
+             y="132.60913" />
+        <text
+             xml:space="preserve"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             x="21.744568"
+             y="140.13277"
+             id="text1110"><tspan
+                 sodipodi:role="line"
+                 id="tspan1108"
+                 x="21.744568"
+                 y="140.13277"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332">BED</tspan></text>
+        <text
+             id="text1136"
+             y="236.18953"
+             x="114.97505"
+             style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+             xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#666666;stroke-width:0.26458332"
+                 y="236.18953"
+                 x="114.97505"
+                 id="tspan1134"
+                 sodipodi:role="line">HOSTEL-</tspan></text>
+    </g>
+</svg>
