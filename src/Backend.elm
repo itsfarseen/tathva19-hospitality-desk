@@ -1,10 +1,14 @@
 module Backend exposing
-    ( Error(..)
+    ( BedAssignment
+    , Bill
+    , Error(..)
+    , HttpError(..)
     , LoginCreds
     , LoginError(..)
+    , NewBill
     , Participant
-    , ParticipantID
     , QueryError(..)
+    , RemoteData(..)
     , SaveError(..)
     , Token
     , getBill
@@ -22,7 +26,15 @@ import Task
 
 
 serverUrl =
-    "https://staging.tathva.org/"
+    -- "https://staging.tathva.org/"
+    "http://localhost:5000/"
+
+
+type RemoteData data error
+    = NotRequested
+    | Loading
+    | Loaded data
+    | LoadFailed error
 
 
 type alias Token =
@@ -54,16 +66,12 @@ type LoginError
     = InvalidCreds
 
 
-type ParticipantID
-    = ParticipantID String
-
-
-type alias BedNum =
+type alias BedNo =
     String
 
 
 type alias BedAssignment =
-    ( Participant, BedNum )
+    ( Participant, BedNo )
 
 
 type alias NewBill =
@@ -84,6 +92,7 @@ type alias Participant =
     , college : String
     , mobile : String
     , shortid : String
+    , email : String
     }
 
 
@@ -104,7 +113,9 @@ getParticipants token toMsg =
             expectJson
                 toMsg
                 (\code -> Nothing)
-                (D.list participantDecoder)
+                (D.at [ "participants" ]
+                    (D.list participantDecoder)
+                )
         , headers = [ authHeader token ]
         , body = Http.emptyBody
         , timeout = Nothing
@@ -195,12 +206,23 @@ loginTokenDecorder =
 
 participantDecoder : D.Decoder Participant
 participantDecoder =
-    D.map4
+    D.map5
         Participant
         (D.field "name" D.string)
         (D.field "college" D.string)
-        (D.field "mobile" D.string)
+        (D.maybe (D.field "mobile" D.string)
+            |> D.map
+                (\maybeMobile ->
+                    case maybeMobile of
+                        Just mobile ->
+                            mobile
+
+                        Nothing ->
+                            ""
+                )
+        )
         (D.field "short_id" D.string)
+        (D.field "email" D.string)
 
 
 bedAssignmentDecoder : D.Decoder BedAssignment
@@ -240,10 +262,10 @@ encodeNewBill bill =
 
 
 encodeBedAssignment : BedAssignment -> E.Value
-encodeBedAssignment ( participant, bedNum ) =
+encodeBedAssignment ( participant, bedNo ) =
     E.object
         [ ( "short_id", E.string participant.shortid )
-        , ( "bed_id", E.string bedNum )
+        , ( "bed_id", E.string bedNo )
         ]
 
 
@@ -284,7 +306,10 @@ expectJson toMsg toErr decoder =
                             Err <| Error err
 
                         _ ->
-                            if metadata.statusCode // 100 == 5 then
+                            if metadata.statusCode == 401 then
+                                Err <| TokenExpired
+
+                            else if metadata.statusCode // 100 == 5 then
                                 Err <| HttpError (ServerError { statusCode = String.fromInt metadata.statusCode, body = body })
 
                             else
@@ -293,7 +318,7 @@ expectJson toMsg toErr decoder =
                 Http.GoodStatus_ metadata body ->
                     case D.decodeString decoder body of
                         Err e ->
-                            Err <| HttpError (ServerError { statusCode = "599", body = "Failed to decode JSON response: " ++ D.errorToString e })
+                            Err <| HttpError (CodeError ("Failed to decode JSON response: " ++ D.errorToString e))
 
                         Ok obj ->
                             Ok obj
