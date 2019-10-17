@@ -8,8 +8,10 @@ import Element.Background
 import Element.Font as Font
 import Element.Input as Input
 import GlobalMsg exposing (GlobalMsg)
-import Html
+import Html.Attributes
 import Pages
+import Pages.Map as Map
+import Pages.Rules as Rules
 import Theme
 
 
@@ -81,17 +83,28 @@ commonErrorMessages error =
 
 view : Model -> Element Msg
 view model =
-    column [ Element.paddingXY 20 20, Font.size 15, Element.spacing 40, Element.alignTop, Element.width (Element.fill |> Element.maximum 600) ]
-        [ case model.bill of
+    column [ Element.paddingXY 20 20, Font.size 15, Element.spacing 10, Element.alignTop, Element.width Element.fill ]
+        (case model.bill of
             Loaded bill ->
-                BillComp.savedBill bill
+                [ Element.column [ Element.width Element.fill ]
+                    [ BillComp.savedBill bill
+                    , Theme.title2 "Map and Rules & Regulations at attached below"
+                    ]
+                , Map.view
+                , Rules.view
+                ]
+                    |> List.map fullHeight
 
             LoadFailed err ->
-                Theme.title (commonErrorMessages err)
+                [ Theme.title (commonErrorMessages err) ]
 
             Loading ->
-                Theme.title "Loading"
+                [ Theme.title "Loading" ]
 
             NotRequested ->
-                Theme.title "Not Loaded"
-        ]
+                [ Theme.title "Not Loaded" ]
+        )
+
+
+fullHeight el =
+    Element.el [ Element.htmlAttribute (Html.Attributes.style "min-height" "97vh"), Element.width Element.fill, Element.paddingXY 20 60 ] el
