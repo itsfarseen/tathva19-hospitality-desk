@@ -125,6 +125,20 @@ update msg model =
         ( _, GlobalMsg ExitPrintMode ) ->
             ( { model | display = Screen }, Cmd.none )
 
+        ( _, GlobalMsg (LogIn { token }) ) ->
+            let
+                ( appState_, cmd ) =
+                    AppState.setAuth model.appState (AppState.LoggedIn token)
+            in
+            ( { model | display = Screen, appState = appState_ }, cmd )
+
+        ( _, GlobalMsg LogOut ) ->
+            let
+                ( appState_, cmd ) =
+                    AppState.setAuth model.appState AppState.LoggedOut
+            in
+            ( { model | display = Screen, appState = appState_ }, cmd )
+
         ( _, GlobalMsg (RedirectToPage page) ) ->
             let
                 -- Load page first, then changeUrl to avoid flickering
@@ -201,7 +215,7 @@ loadPage page display appState =
                             ( PageNotFound, Cmd.none, Nothing )
 
                         Pages.Logout ->
-                            ( Logout, Cmd.none, Nothing )
+                            ( Logout, Cmd.none, Just GlobalMsg.LogOut )
 
                         Pages.ViewBill { billNo } ->
                             convertMsg (ViewBill.init token billNo) ViewBill ViewBillMsg
