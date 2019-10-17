@@ -31,10 +31,10 @@ savedBill bill =
         , Theme.title2
             ("DEREG: "
                 ++ (if bill.dereg then
-                        "DEREGED"
+                        "DE-REGED"
 
                     else
-                        "NOT DEREGED"
+                        "NOT DE-REGED"
                    )
             )
         , column [ Element.spacing 10, Element.width Element.fill ]

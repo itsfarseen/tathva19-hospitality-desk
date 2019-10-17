@@ -23,12 +23,12 @@ getBillNo model =
 
 
 type alias Model =
-    { billNo : String, bill : RemoteData Bill (Error QueryError) }
+    { billNo : String, token : String, bill : RemoteData Bill (Error QueryError) }
 
 
 init : Token -> String -> ( Model, Cmd Msg, Maybe GlobalMsg )
 init token billNo =
-    ( { billNo = billNo, bill = Loading }
+    ( { billNo = billNo, token = token, bill = Loading }
     , Backend.getBill token billNo GotBillResponse
     , Nothing
     )
@@ -36,13 +36,30 @@ init token billNo =
 
 type Msg
     = GotBillResponse (Result (Error QueryError) Bill)
-    | PrintModeClicked
+    | DeregResponse (Result (Error QueryError) ())
+    | DeregClicked
+    | PrintClicked
+    | MailClicked
+
+
+getFirstMailId : Bill -> Maybe String
+getFirstMailId bill =
+    bill.bedAssignments
+        |> List.filterMap
+            (\{ participant } ->
+                if participant.email /= "" then
+                    Just participant.email
+
+                else
+                    Nothing
+            )
+        |> List.head
 
 
 update : Model -> Msg -> ( Model, Cmd Msg, Maybe GlobalMsg )
 update model msg =
-    case msg of
-        GotBillResponse resp ->
+    case ( model.bill, msg ) of
+        ( _, GotBillResponse resp ) ->
             ( { model
                 | bill =
                     case resp of
@@ -56,8 +73,26 @@ update model msg =
             , Nothing
             )
 
-        PrintModeClicked ->
-            ( model, Cmd.none, Just GlobalMsg.EnterPrintMode )
+        ( _, DeregResponse resp ) ->
+            ( model, Backend.getBill model.token model.billNo GotBillResponse, Nothing )
+
+        ( _, PrintClicked ) ->
+            ( model, Cmd.none, Nothing )
+
+        ( Loaded bill, DeregClicked ) ->
+            ( model
+            , Backend.deregBill model.token
+                model.billNo
+                (not bill.dereg)
+                DeregResponse
+            , Nothing
+            )
+
+        ( _, DeregClicked ) ->
+            ( model, Cmd.none, Nothing )
+
+        ( _, MailClicked ) ->
+            ( model, Cmd.none, Nothing )
 
 
 commonErrorMessages : Backend.Error err -> String
@@ -79,19 +114,62 @@ commonErrorMessages error =
             "Login Expired"
 
 
-view : Model -> Bool -> Element Msg
-view model printMode =
-    column [ Element.paddingXY 20 20, Font.size 15, Element.spacing 40, Element.alignTop, Element.width Element.fill ]
-        [ case model.bill of
+view : Model -> Element Msg
+view model =
+    column [ Element.paddingXY 20 20, Font.size 15, Element.spacing 40, Element.alignTop, Element.width (Element.fill |> Element.maximum 600) ]
+        (case model.bill of
             Loaded bill ->
-                BillComp.savedBill bill
+                [ row [ Element.spacing 20 ]
+                    [ Theme.button
+                        (if bill.dereg then
+                            "UNDO DE-REG"
+
+                         else
+                            "DE-REG"
+                        )
+                        DeregClicked
+                        True
+                    , Element.newTabLink []
+                        { url = "/bill/" ++ model.billNo ++ "/print"
+                        , label =
+                            Theme.button
+                                "Print"
+                                PrintClicked
+                                True
+                        }
+                    , let
+                        mailId_ =
+                            getFirstMailId bill
+                      in
+                      case mailId_ of
+                        Just mailId ->
+                            Element.newTabLink []
+                                { url = "mailto:" ++ mailId ++ "?subject=\"Tathva'19 Hospitality Bill\""
+                                , label =
+                                    Theme.button
+                                        ("Mail: "
+                                            ++ mailId
+                                        )
+                                        MailClicked
+                                        True
+                                }
+
+                        Nothing ->
+                            Theme.button
+                                "No Mail id"
+                                MailClicked
+                                False
+                    ]
+                , BillComp.savedBill
+                    bill
+                ]
 
             LoadFailed err ->
-                Theme.title (commonErrorMessages err)
+                [ Theme.title (commonErrorMessages err) ]
 
             Loading ->
-                Theme.title "Loading"
+                [ Theme.title "Loading" ]
 
             NotRequested ->
-                Theme.title "Not Loaded"
-        ]
+                [ Theme.title "Not Loaded" ]
+        )

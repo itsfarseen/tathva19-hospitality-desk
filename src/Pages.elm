@@ -12,6 +12,7 @@ type Page
     | Logout
     | NotFound
     | ViewBill { billNo : String }
+    | PrintBill { billNo : String }
 
 
 listForNav : AppState.Auth -> List Page
@@ -40,6 +41,9 @@ fromUrl string =
                         , map
                             (\billNo -> ViewBill { billNo = billNo })
                             (s "bill" </> Url.Parser.string)
+                        , map
+                            (\billNo -> PrintBill { billNo = billNo })
+                            (s "bill" </> Url.Parser.string </> s "print")
                         ]
             in
             parse parser url
@@ -65,5 +69,8 @@ toUrl page =
 
                 ViewBill { billNo } ->
                     [ "bill", billNo ]
+
+                PrintBill { billNo } ->
+                    [ "bill", billNo, "print" ]
     in
     "/" ++ String.join "/" pieces

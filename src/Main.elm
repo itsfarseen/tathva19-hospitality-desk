@@ -20,6 +20,7 @@ import Pages.Dashboard as Dashboard
 import Pages.Login as Login
 import Pages.Logout as Logout
 import Pages.NotFound as NotFound
+import Pages.PrintBill as PrintBill
 import Pages.ViewBill as ViewBill
 import Theme
 import Url
@@ -56,6 +57,7 @@ type Model
     | Logout
     | Dashboard Dashboard.Model
     | ViewBill ViewBill.Model
+    | PrintBill PrintBill.Model
 
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( MainModel, Cmd Msg )
@@ -84,6 +86,7 @@ type Msg
     | LoginMsg Login.Msg
     | DashboardMsg Dashboard.Msg
     | ViewBillMsg ViewBill.Msg
+    | PrintBillMsg PrintBill.Msg
     | GlobalMsg GlobalMsg
 
 
@@ -171,6 +174,16 @@ update msg model =
                 |> updateMainModel model
                 |> handleGlobalMsg
 
+        ( ViewBill subModel, ViewBillMsg subMsg ) ->
+            convertMsg (ViewBill.update subModel subMsg) ViewBill ViewBillMsg
+                |> updateMainModel model
+                |> handleGlobalMsg
+
+        ( PrintBill subModel, PrintBillMsg subMsg ) ->
+            convertMsg (PrintBill.update subModel subMsg) PrintBill PrintBillMsg
+                |> updateMainModel model
+                |> handleGlobalMsg
+
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -192,6 +205,9 @@ getTitle page =
 
         Pages.ViewBill { billNo } ->
             ViewBill.title billNo
+
+        Pages.PrintBill { billNo } ->
+            PrintBill.title billNo
 
 
 changeUrlTo : Pages.Page -> MainModel -> ( MainModel, Cmd Msg )
@@ -229,6 +245,9 @@ loadPage page display appState =
                         Pages.ViewBill { billNo } ->
                             convertMsg (ViewBill.init token billNo) ViewBill ViewBillMsg
 
+                        Pages.PrintBill { billNo } ->
+                            convertMsg (PrintBill.init token billNo) PrintBill PrintBillMsg
+
                         _ ->
                             -- Everything else goes to dashboard
                             convertMsg (Dashboard.init token) Dashboard DashboardMsg
@@ -263,6 +282,9 @@ getPage model =
         ViewBill subModel ->
             Pages.ViewBill { billNo = ViewBill.getBillNo subModel }
 
+        PrintBill subModel ->
+            Pages.PrintBill { billNo = PrintBill.getBillNo subModel }
+
 
 
 -- VIEW
@@ -286,8 +308,12 @@ getPageView { model, display } =
             Logout.view
 
         ViewBill subModel ->
-            ViewBill.view subModel (display == Print)
+            ViewBill.view subModel
                 |> Element.map ViewBillMsg
+
+        PrintBill subModel ->
+            PrintBill.view subModel
+                |> Element.map PrintBillMsg
 
 
 view : MainModel -> Browser.Document Msg
@@ -296,8 +322,12 @@ view { model, appState, display } =
     , body =
         [ layout [] <|
             Theme.root <|
-                case display of
-                    Screen ->
+                case getPage model of
+                    Pages.PrintBill _ ->
+                        PrintLayout.view
+                            (getPageView { model = model, appState = appState, display = display })
+
+                    _ ->
                         MainLayout.view
                             (NavLayout.view
                                 (getPage model)
@@ -305,10 +335,6 @@ view { model, appState, display } =
                                 (GlobalMsg << RedirectToPage)
                                 getTitle
                             )
-                            (getPageView { model = model, appState = appState, display = display })
-
-                    Print ->
-                        PrintLayout.view
                             (getPageView { model = model, appState = appState, display = display })
         ]
     }

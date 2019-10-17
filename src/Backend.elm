@@ -12,6 +12,7 @@ module Backend exposing
     , RemoteData(..)
     , SaveError(..)
     , Token
+    , deregBill
     , getBill
     , getParticipant
     , getParticipants
@@ -234,6 +235,39 @@ getBill token billNo toMsg =
         }
 
 
+deregBill : Token -> String -> Bool -> (Result (Error QueryError) () -> msg) -> Cmd msg
+deregBill token billNo dereg toMsg =
+    Http.request
+        { method = "GET"
+        , url =
+            serverUrl
+                ++ "hospitality/"
+                ++ billNo
+                ++ "/dereg?status="
+                ++ (if dereg then
+                        "true"
+
+                    else
+                        "false"
+                   )
+        , body = Http.emptyBody
+        , headers = [ authHeader token ]
+        , expect =
+            expectWhatever
+                (toMsg << Debug.log "deregBill")
+                (\code ->
+                    case code of
+                        404 ->
+                            Just NotFound
+
+                        _ ->
+                            Nothing
+                )
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
 login : LoginCreds -> (Result (Error LoginError) Token -> msg) -> Cmd msg
 login creds toMsg =
     Http.request
@@ -333,7 +367,7 @@ participantDecoder =
                             mobile
 
                         Nothing ->
-                            ""
+                            "N/A"
                 )
         )
         (D.field "short_id" D.string)
