@@ -36,7 +36,7 @@ import Task
 serverUrl =
     -- "http://localhost:5000/"
     -- "https://staging.tathva.org/"
-    "https://api.tathva.org"
+    "https://api.tathva.org/"
 
 
 type RemoteData data error
