@@ -2,6 +2,7 @@ module Components.Bill exposing (newBill, savedBill)
 
 import Backend exposing (BedAssignment, Bill, NewBill)
 import Element exposing (Element, column, row, wrappedRow)
+import Html.Attributes
 import Theme
 
 
@@ -85,6 +86,7 @@ bedAssignment maybeDeleteMsg { participant, bedno } =
     row
         (Theme.pageSubCardAttrs
             ++ [ Element.width Element.fill, Element.spaceEvenly ]
+            ++ fixPageBreak
         )
         [ column [ Element.spacing 5, Element.width <| Element.fillPortion 7 ]
             [ Theme.title2 ("T19-" ++ participant.shortId)
@@ -107,3 +109,9 @@ bedAssignment maybeDeleteMsg { participant, bedno } =
                     Element.none
             )
         ]
+
+
+fixPageBreak =
+    [ Element.htmlAttribute (Html.Attributes.style "page-break-inside" "avoid")
+    , Element.htmlAttribute (Html.Attributes.style "page-break-after" "always")
+    ]

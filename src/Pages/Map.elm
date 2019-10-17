@@ -8,12 +8,10 @@ import Theme
 
 view =
     column
-        [ Element.padding 20
+        [ Element.paddingXY 20 20
         , Element.spacing 20
         ]
         [ image
-            [ Element.width Element.fill
-            , Element.htmlAttribute (style "page-break-after" "always")
-            ]
+            [ Element.width Element.fill, Element.height Element.fill ]
             { src = "/TathvaMap.png", description = "Map showing hospitality locations." }
         ]

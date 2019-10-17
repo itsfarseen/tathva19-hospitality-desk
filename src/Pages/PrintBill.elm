@@ -86,14 +86,13 @@ view model =
     column [ Element.paddingXY 20 20, Font.size 15, Element.spacing 10, Element.alignTop, Element.width Element.fill ]
         (case model.bill of
             Loaded bill ->
-                [ Element.column [ Element.width Element.fill ]
+                [ Element.column [ Element.width Element.fill, Element.spacing 20 ]
                     [ BillComp.savedBill bill
                     , Theme.title2 "Map and Rules & Regulations at attached below"
                     ]
-                , Map.view
-                , Rules.view
+                , fullHeight Rules.view
+                , fullHeight Map.view
                 ]
-                    |> List.map fullHeight
 
             LoadFailed err ->
                 [ Theme.title (commonErrorMessages err) ]
@@ -107,4 +106,4 @@ view model =
 
 
 fullHeight el =
-    Element.el [ Element.htmlAttribute (Html.Attributes.style "min-height" "97vh"), Element.width Element.fill, Element.paddingXY 20 60 ] el
+    Element.el [ Element.htmlAttribute (Html.Attributes.style "min-height" "97%"), Element.height Element.fill ] el
