@@ -13,6 +13,7 @@ newBill : NewBill -> ({ shortId : String } -> msg) -> Element msg
 newBill bill deleteMsg =
     column [ Element.padding 20, Element.spacing 20, Element.width Element.fill ]
         [ Theme.title1 ("Hospitality Bill: #" ++ bill.billNo)
+        , Theme.title2 ("Count: " ++ (List.length bill.bedAssignments |> String.fromInt))
         , column [ Element.spacing 10, Element.width Element.fill ]
             (if List.length bill.bedAssignments > 0 then
                 [ bedAssignmentsHeader ]
@@ -37,6 +38,7 @@ savedBill bill =
                         "NOT DE-REGED"
                    )
             )
+        , Theme.title2 ("Count: " ++ (List.length bill.bedAssignments |> String.fromInt))
         , column [ Element.spacing 10, Element.width Element.fill ]
             (if List.length bill.bedAssignments > 0 then
                 [ bedAssignmentsHeader ]
@@ -85,7 +87,7 @@ bedAssignment maybeDeleteMsg { participant, bedno } =
             ++ [ Element.width Element.fill, Element.spaceEvenly ]
         )
         [ column [ Element.spacing 5, Element.width <| Element.fillPortion 7 ]
-            [ Theme.title2 participant.shortId
+            [ Theme.title2 ("T19-" ++ participant.shortId)
             , Theme.title2 participant.name
             , Theme.title2 participant.college
             ]
