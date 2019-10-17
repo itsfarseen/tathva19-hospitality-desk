@@ -228,7 +228,7 @@ getBill token billNo toMsg =
                         _ ->
                             Nothing
                 )
-                billDecoder
+                (D.at [ "bill" ] billDecoder)
         , timeout = Nothing
         , tracker = Nothing
         }

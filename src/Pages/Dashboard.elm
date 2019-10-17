@@ -101,19 +101,6 @@ handleCommonErrors error model displayError =
     )
 
 
-normalizeShortId : String -> String
-normalizeShortId shortId =
-    let
-        shortId_ =
-            String.toUpper shortId
-    in
-    if String.startsWith "T19-" shortId_ then
-        String.dropLeft 4 shortId_
-
-    else
-        shortId_
-
-
 viewBill : String -> Model -> ( Model, Cmd Msg, Maybe GlobalMsg )
 viewBill billNo model =
     ( model, Cmd.none, Just <| GlobalMsg.RedirectToPage <| Pages.ViewBill { billNo = billNo } )
@@ -136,7 +123,11 @@ update model msg =
                         String.toUpper shortId
 
                 shortIdDisplay =
-                    if String.length shortIdNormalized < 4 && String.startsWith shortIdNormalized "T19" then
+                    if
+                        String.length shortIdNormalized
+                            < 4
+                            && String.startsWith shortIdNormalized "T19-"
+                    then
                         shortIdNormalized
 
                     else
@@ -157,9 +148,13 @@ update model msg =
                     }
             in
             ( model_
-            , Backend.getParticipant model.token
-                ParticipantLoad
-                (normalizeShortId shortIdNormalized)
+            , if triggerLoad then
+                Backend.getParticipant model.token
+                    ParticipantLoad
+                    shortIdNormalized
+
+              else
+                Cmd.none
             , Nothing
             )
 
@@ -188,7 +183,7 @@ update model msg =
             ( { model | viewBillNo = billNo }, Cmd.none, Nothing )
 
         ViewBill ->
-            ( model, Cmd.none, Nothing )
+            ( model, Cmd.none, Just (GlobalMsg.RedirectToPage <| Pages.ViewBill { billNo = model.viewBillNo }) )
 
         CreateBill ->
             let

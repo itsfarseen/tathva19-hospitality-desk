@@ -9,3 +9,4 @@ type GlobalMsg
     | LogOut
     | EnterPrintMode
     | ExitPrintMode
+    | Batch (List GlobalMsg)

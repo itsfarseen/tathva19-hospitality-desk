@@ -119,6 +119,15 @@ update msg model =
             -- TODO
             ( model, Cmd.none )
 
+        ( _, GlobalMsg (Batch list) ) ->
+            List.foldl
+                (\msg1 ( model1, cmds ) ->
+                    update (GlobalMsg msg1) model1 |> Tuple.mapSecond (\cmd1 -> cmds ++ [ cmd1 ])
+                )
+                ( model, [] )
+                list
+                |> Tuple.mapSecond Cmd.batch
+
         ( _, GlobalMsg EnterPrintMode ) ->
             ( { model | display = Print }, Cmd.none )
 

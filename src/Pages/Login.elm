@@ -61,7 +61,14 @@ update model msg =
             ( setState model LoggingIn, Backend.login model.form loginHandler, Nothing )
 
         LoginSuccess token ->
-            ( model, Cmd.none, Just (GlobalMsg.LogIn { token = token }) )
+            ( model
+            , Cmd.none
+            , Just <|
+                GlobalMsg.Batch
+                    [ GlobalMsg.LogIn { token = token }
+                    , GlobalMsg.RedirectToPage Pages.Dashboard
+                    ]
+            )
 
         LoginFailed _ ->
             ( setState model LogInFailed, Cmd.none, Nothing )
