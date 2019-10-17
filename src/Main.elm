@@ -20,6 +20,7 @@ import Pages.Dashboard as Dashboard
 import Pages.Login as Login
 import Pages.Logout as Logout
 import Pages.NotFound as NotFound
+import Pages.ViewBill as ViewBill
 import Theme
 import Url
 
@@ -46,14 +47,15 @@ type Display
 
 
 type alias MainModel =
-    ( Model, Display )
+    { model : Model, appState : AppState, display : Display }
 
 
 type Model
     = Login Login.Model
-    | PageNotFound AppState
-    | Logout AppState
+    | PageNotFound
+    | Logout
     | Dashboard Dashboard.Model
+    | ViewBill ViewBill.Model
 
 
 init : Maybe String -> Url.Url -> Nav.Key -> ( MainModel, Cmd Msg )
@@ -69,6 +71,7 @@ init flags url navkey =
             Screen
     in
     loadPage requestedPage initialDisplay appState
+        |> handleGlobalMsg
 
 
 
@@ -78,18 +81,14 @@ init flags url navkey =
 type Msg
     = UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
-    | ParticipantsDataResult (Result (Backend.Error ()) (List Participant))
     | LoginMsg Login.Msg
     | DashboardMsg Dashboard.Msg
+    | ViewBillMsg ViewBill.Msg
     | GlobalMsg GlobalMsg
 
 
-type alias PageUpdate subModel subMsg =
-    ( subModel, Cmd subMsg, Maybe GlobalMsg )
-
-
 subscriptions : MainModel -> Sub Msg
-subscriptions ( model, _ ) =
+subscriptions { model } =
     case model of
         Dashboard subModel ->
             Sub.map DashboardMsg (Dashboard.subscriptions subModel)
@@ -98,87 +97,59 @@ subscriptions ( model, _ ) =
             Sub.none
 
 
-updateModel : PageUpdate subModel subMsg -> Display -> (subModel -> Model) -> (subMsg -> Msg) -> ( MainModel, Cmd Msg )
-updateModel ( subModel, subCmd, maybeGlobalMsg ) display toModel toMsg =
-    -- FIXME: This function is poorly named
-    let
-        ( model, cmd ) =
-            case maybeGlobalMsg of
-                Just globalMsg ->
-                    update (GlobalMsg globalMsg) ( toModel subModel, display )
+handleGlobalMsg : ( MainModel, Cmd Msg, Maybe GlobalMsg ) -> ( MainModel, Cmd Msg )
+handleGlobalMsg ( model, cmd, maybeGlobalMsg ) =
+    case maybeGlobalMsg of
+        Just globalMsg ->
+            update (GlobalMsg globalMsg) model
+                |> Tuple.mapSecond (\cmd1 -> Cmd.batch [ cmd, cmd1 ])
 
-                Nothing ->
-                    ( ( toModel subModel, display ), Cmd.none )
-    in
-    ( model, Cmd.batch [ Cmd.map toMsg subCmd, cmd ] )
-
-
-toMainModel : Display -> Model -> MainModel
-toMainModel display model =
-    ( model, display )
+        Nothing ->
+            ( model, cmd )
 
 
 update : Msg -> MainModel -> ( MainModel, Cmd Msg )
-update msg ( model, display ) =
-    case ( model, msg ) of
+update msg model =
+    case ( model.model, msg ) of
         ( _, UrlChanged url ) ->
-            loadPage (Pages.fromUrl <| Url.toString url) display (getAppState model)
+            loadPage (Pages.fromUrl <| Url.toString url) model.display model.appState
+                |> handleGlobalMsg
 
         ( _, UrlRequested _ ) ->
-            ( ( model, Screen ), Cmd.none )
-
-        ( _, GlobalMsg (RedirectToPage Pages.Logout) ) ->
-            let
-                ( newAppState, cmd1 ) =
-                    AppState.setAuth (getAppState model) AppState.LoggedOut
-
-                ( newModel, cmd2 ) =
-                    update (GlobalMsg (RedirectToPage Pages.Login)) ( setAppState model newAppState, Screen )
-            in
-            ( newModel, Cmd.batch [ cmd1, cmd2 ] )
+            -- TODO
+            ( model, Cmd.none )
 
         ( _, GlobalMsg EnterPrintMode ) ->
-            ( ( model, Print ), Cmd.none )
+            ( { model | display = Print }, Cmd.none )
 
         ( _, GlobalMsg ExitPrintMode ) ->
-            ( ( model, Screen ), Cmd.none )
+            ( { model | display = Screen }, Cmd.none )
 
         ( _, GlobalMsg (RedirectToPage page) ) ->
             let
                 -- Load page first, then changeUrl to avoid flickering
                 -- when reloading from init functions
                 ( newModel1, cmd1 ) =
-                    loadPage page display (getAppState model)
+                    loadPage page model.display model.appState
+                        |> handleGlobalMsg
 
                 ( newModel2, cmd2 ) =
-                    changeUrlTo page (Tuple.first newModel1)
+                    changeUrlTo page newModel1
             in
-            ( ( newModel2, Screen ), Cmd.batch [ cmd1, cmd2 ] )
-
-        ( _, ParticipantsDataResult (Ok participants) ) ->
-            let
-                ( appState, cmd ) =
-                    AppState.setParticipantsList (getAppState model) participants
-            in
-            ( ( setAppState model appState, display ), cmd )
+            ( { newModel2 | display = Screen }, Cmd.batch [ cmd1, cmd2 ] )
 
         ( Login subModel, LoginMsg subMsg ) ->
-            updateModel (Login.update subModel subMsg) display Login LoginMsg
-
-        ( Login _, _ ) ->
-            ( ( model, display ), Cmd.none )
-
-        ( Logout _, _ ) ->
-            ( ( model, display ), Cmd.none )
+            convertMsg (Login.update subModel subMsg) Login LoginMsg
+                |> updateMainModel model
+                |> handleGlobalMsg
 
         ( Dashboard subModel, DashboardMsg subMsg ) ->
-            updateModel (Dashboard.update subModel subMsg) display Dashboard DashboardMsg
+            convertMsg (Dashboard.update subModel subMsg) Dashboard DashboardMsg
+                |> updateMainModel model
+                |> handleGlobalMsg
 
-        ( Dashboard _, _ ) ->
-            ( ( model, display ), Cmd.none )
-
-        ( PageNotFound _, _ ) ->
-            ( ( model, display ), Cmd.none )
+        ( _, _ ) ->
+            ( model, Cmd.none )
 
 
 getTitle : Pages.Page -> String
@@ -196,62 +167,59 @@ getTitle page =
         Pages.Logout ->
             Logout.title
 
+        Pages.ViewBill { billNo } ->
+            ViewBill.title billNo
 
-changeUrlTo : Pages.Page -> Model -> ( Model, Cmd Msg )
+
+changeUrlTo : Pages.Page -> MainModel -> ( MainModel, Cmd Msg )
 changeUrlTo page model =
     let
         navKey =
-            AppState.getNavKey (getAppState model)
+            AppState.getNavKey model.appState
     in
     ( model, Nav.pushUrl navKey (Pages.toUrl page) )
 
 
-loadPage : Pages.Page -> Display -> AppState -> ( MainModel, Cmd Msg )
+convertMsg : ( model, Cmd msg, a ) -> (model -> Model) -> (msg -> Msg) -> ( Model, Cmd Msg, a )
+convertMsg ( model, cmd, a ) toModel toMsg =
+    ( toModel model, Cmd.map toMsg cmd, a )
+
+
+updateMainModel : MainModel -> ( Model, Cmd Msg, a ) -> ( MainModel, Cmd Msg, a )
+updateMainModel mainModel ( model, cmd, a ) =
+    ( { mainModel | model = model }, cmd, a )
+
+
+loadPage : Pages.Page -> Display -> AppState -> ( MainModel, Cmd Msg, Maybe GlobalMsg )
 loadPage page display appState =
-    case page of
-        Pages.Login ->
-            updateModel (Login.init appState) display Login LoginMsg
+    let
+        ( model, cmd, maybeGlobalMsg ) =
+            case AppState.getAuth appState of
+                AppState.LoggedIn token ->
+                    case page of
+                        Pages.NotFound ->
+                            ( PageNotFound, Cmd.none, Nothing )
 
-        Pages.NotFound ->
-            ( ( PageNotFound appState, display ), Cmd.none )
+                        Pages.Logout ->
+                            ( Logout, Cmd.none, Nothing )
 
-        Pages.Dashboard ->
-            updateModel (Dashboard.init appState) display Dashboard DashboardMsg
+                        Pages.ViewBill { billNo } ->
+                            convertMsg (ViewBill.init token billNo) ViewBill ViewBillMsg
 
-        Pages.Logout ->
-            ( ( Logout appState, display ), Cmd.none )
+                        _ ->
+                            -- Everything else goes to dashboard
+                            convertMsg (Dashboard.init token) Dashboard DashboardMsg
 
+                AppState.LoggedOut ->
+                    case page of
+                        Pages.NotFound ->
+                            ( PageNotFound, Cmd.none, Nothing )
 
-getAppState : Model -> AppState
-getAppState model =
-    case model of
-        Login subModel ->
-            Login.getAppState subModel
-
-        PageNotFound appState ->
-            appState
-
-        Dashboard subModel ->
-            Dashboard.getAppState subModel
-
-        Logout appState ->
-            appState
-
-
-setAppState : Model -> AppState -> Model
-setAppState model newAppState =
-    case model of
-        Login subModel ->
-            Login (Login.setAppState subModel newAppState)
-
-        Dashboard subModel ->
-            Dashboard (Dashboard.setAppState subModel newAppState)
-
-        PageNotFound appState ->
-            PageNotFound newAppState
-
-        Logout appState ->
-            Logout newAppState
+                        _ ->
+                            -- Everything else goes to dashboard
+                            convertMsg Login.init Login LoginMsg
+    in
+    ( { model = model, display = display, appState = appState }, cmd, maybeGlobalMsg )
 
 
 getPage : Model -> Pages.Page
@@ -263,19 +231,22 @@ getPage model =
         Dashboard _ ->
             Pages.Dashboard
 
-        PageNotFound _ ->
+        PageNotFound ->
             Pages.NotFound
 
-        Logout _ ->
+        Logout ->
             Pages.Logout
+
+        ViewBill subModel ->
+            Pages.ViewBill { billNo = ViewBill.getBillNo subModel }
 
 
 
 -- VIEW
 
 
-getPageView : Model -> Element Msg
-getPageView model =
+getPageView : MainModel -> Element Msg
+getPageView { model, display } =
     case model of
         Login subModel ->
             Login.view subModel
@@ -285,32 +256,36 @@ getPageView model =
             Dashboard.view subModel
                 |> Element.map DashboardMsg
 
-        PageNotFound _ ->
+        PageNotFound ->
             NotFound.view
 
-        Logout _ ->
+        Logout ->
             Logout.view
+
+        ViewBill subModel ->
+            ViewBill.view subModel (display == Print)
+                |> Element.map ViewBillMsg
 
 
 view : MainModel -> Browser.Document Msg
-view ( model, screen ) =
+view { model, appState, display } =
     { title = "Hospitality | " ++ (getPage model |> getTitle)
     , body =
         [ layout [] <|
             Theme.root <|
-                case screen of
+                case display of
                     Screen ->
                         MainLayout.view
                             (NavLayout.view
                                 (getPage model)
-                                (AppState.getAuth (getAppState model))
+                                (AppState.getAuth appState)
                                 (GlobalMsg << RedirectToPage)
                                 getTitle
                             )
-                            (getPageView model)
+                            (getPageView { model = model, appState = appState, display = display })
 
                     Print ->
                         PrintLayout.view
-                            (getPageView model)
+                            (getPageView { model = model, appState = appState, display = display })
         ]
     }

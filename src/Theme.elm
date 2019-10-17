@@ -89,7 +89,7 @@ title1 t =
 
 
 title2 t =
-    Element.el [ Font.size 12, Font.color fg1, Font.bold ] (text (String.toUpper t))
+    Element.paragraph [ Font.size 12, Font.color fg1, Font.bold ] [ text (String.toUpper t) ]
 
 
 baseControl =

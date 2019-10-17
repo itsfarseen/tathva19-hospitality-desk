@@ -1,4 +1,4 @@
-module Pages.Login exposing (Model, Msg, getAppState, init, setAppState, title, update, view)
+module Pages.Login exposing (Model, Msg, init, title, update, view)
 
 import AppState exposing (AppState)
 import Backend exposing (Error, LoginCreds, LoginError, Token)
@@ -16,12 +16,8 @@ title =
     "Login"
 
 
-type Model
-    = Model ModelRecord -- As an opaque type
-
-
-type alias ModelRecord =
-    { state : State, form : Form, appState : AppState }
+type alias Model =
+    { state : State, form : Form }
 
 
 type alias Form =
@@ -36,37 +32,11 @@ type State
     | LogInFailed
 
 
-toInner : Model -> ModelRecord
-toInner model =
-    case model of
-        Model record ->
-            record
-
-
-getAppState : Model -> AppState
-getAppState model =
-    .appState <| toInner model
-
-
-setAppState : Model -> AppState -> Model
-setAppState model newAppState =
-    let
-        record =
-            toInner model
-    in
-    Model { record | appState = newAppState }
-
-
-init : AppState -> ( Model, Cmd Msg, Maybe GlobalMsg )
-init appState =
-    ( Model { state = Default, form = Form "" "", appState = appState }
+init : ( Model, Cmd Msg, Maybe GlobalMsg )
+init =
+    ( { state = Default, form = { userid = "", password = "" } }
     , Cmd.none
-    , case AppState.getAuth appState of
-        AppState.LoggedIn _ ->
-            Just (GlobalMsg.RedirectToPage Pages.Dashboard)
-
-        _ ->
-            Nothing
+    , Nothing
     )
 
 
@@ -88,17 +58,10 @@ update model msg =
             ( updateForm model (\form -> { form | password = password }), Cmd.none, Nothing )
 
         LoginClicked ->
-            ( setState model LoggingIn, Backend.login (getForm model) loginHandler, Nothing )
+            ( setState model LoggingIn, Backend.login model.form loginHandler, Nothing )
 
         LoginSuccess token ->
-            let
-                ( newAppState, appStateCmd ) =
-                    AppState.setAuth (getAppState model) (AppState.LoggedIn token)
-
-                newModel =
-                    setAppState model newAppState
-            in
-            ( newModel, Cmd.batch [ appStateCmd ], Just (GlobalMsg.RedirectToPage Pages.Dashboard) )
+            ( model, Cmd.none, Just (GlobalMsg.LogIn { token = token }) )
 
         LoginFailed _ ->
             ( setState model LogInFailed, Cmd.none, Nothing )
@@ -106,25 +69,12 @@ update model msg =
 
 updateForm : Model -> (Form -> Form) -> Model
 updateForm model updater =
-    let
-        record =
-            toInner model
-    in
-    Model { record | form = updater record.form }
+    { model | form = updater model.form }
 
 
 setState : Model -> State -> Model
 setState model newState =
-    let
-        record =
-            toInner model
-    in
-    Model { record | state = newState }
-
-
-getForm : Model -> Form
-getForm model =
-    .form <| toInner model
+    { model | state = newState }
 
 
 loginHandler : Result (Error LoginError) Token -> Msg
@@ -142,14 +92,14 @@ view model =
     column
         [ Element.width (Element.px 400), Element.paddingXY 20 0, Element.centerX, Element.centerY, Font.size 15, Element.spacing 20 ]
         [ Theme.title "Login"
-        , Theme.inputText (Theme.labelLeft "User ID") (getForm model).userid UserIDChanged
+        , Theme.inputText (Theme.labelLeft "User ID") model.form.userid UserIDChanged
         , Theme.inputPassword
             (Theme.labelLeft "Password")
-            (getForm model).password
+            model.form.password
             PasswordChanged
         , let
             disabled =
-                case (toInner model).state of
+                case model.state of
                     LoggingIn ->
                         True
 

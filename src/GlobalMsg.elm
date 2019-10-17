@@ -5,5 +5,7 @@ import Pages
 
 type GlobalMsg
     = RedirectToPage Pages.Page
+    | LogIn { token : String }
+    | LogOut
     | EnterPrintMode
     | ExitPrintMode

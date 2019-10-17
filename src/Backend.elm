@@ -15,9 +15,12 @@ module Backend exposing
     , getBill
     , getParticipant
     , getParticipants
+    , hasTwoDayWorkshop
+    , hasWorkshop
     , login
     , progressToString
     , saveBill
+    , toParticipant
     )
 
 import Http exposing (Progress)
@@ -69,12 +72,8 @@ type LoginError
     = InvalidCreds
 
 
-type alias BedNo =
-    String
-
-
 type alias BedAssignment =
-    ( Participant, BedNo )
+    { participant : Participant, bedno : String }
 
 
 type alias NewBill =
@@ -94,7 +93,7 @@ type alias Participant =
     { name : String
     , college : String
     , mobile : String
-    , shortid : String
+    , shortId : String
     , email : String
     , tathva_pass : Bool
     }
@@ -104,7 +103,7 @@ type alias ParticipantEx =
     { name : String
     , college : String
     , mobile : String
-    , shortid : String
+    , shortId : String
     , email : String
     , tathva_pass : Bool
     , workshops : List Workshop
@@ -112,7 +111,7 @@ type alias ParticipantEx =
 
 
 type alias Workshop =
-    { title : String, days : String }
+    { title : String, two_days : Bool }
 
 
 type alias LoginCreds =
@@ -121,6 +120,27 @@ type alias LoginCreds =
 
 
 -- PUBLIC FUNCTIONS
+
+
+hasWorkshop : ParticipantEx -> Bool
+hasWorkshop participant =
+    List.length participant.workshops > 0
+
+
+hasTwoDayWorkshop : ParticipantEx -> Bool
+hasTwoDayWorkshop participant =
+    (List.filter (\w -> w.two_days) participant.workshops |> List.length) > 0
+
+
+toParticipant : ParticipantEx -> Participant
+toParticipant participant =
+    { name = participant.name
+    , college = participant.college
+    , mobile = participant.mobile
+    , shortId = participant.shortId
+    , email = participant.email
+    , tathva_pass = participant.tathva_pass
+    }
 
 
 getParticipants : Token -> (Result (Error ()) (List Participant) -> msg) -> Maybe String -> Cmd msg
@@ -286,7 +306,17 @@ workshopDecoder : D.Decoder Workshop
 workshopDecoder =
     D.map2 Workshop
         (D.field "name" D.string)
-        (D.at [ "meta", "days" ] D.string)
+        (D.maybe (D.at [ "meta", "two_day" ] D.string)
+            |> D.map
+                (\v ->
+                    case v of
+                        Just "yes" ->
+                            True
+
+                        _ ->
+                            False
+                )
+        )
 
 
 participantDecoder : D.Decoder Participant
@@ -325,18 +355,22 @@ participantExDecoder =
                             mobile
 
                         Nothing ->
-                            ""
+                            "N/A"
                 )
         )
         (D.field "short_id" D.string)
         (D.field "email" D.string)
         (D.field "tathva_pass" D.bool)
-        (D.field "workshops" (D.list workshopDecoder))
+        (D.field "events"
+            (D.list (D.maybe workshopDecoder)
+                |> D.map (\list -> List.filterMap (\x -> x) list)
+            )
+        )
 
 
 bedAssignmentDecoder : D.Decoder BedAssignment
 bedAssignmentDecoder =
-    D.map2 Tuple.pair
+    D.map2 BedAssignment
         (D.field "participant" participantDecoder)
         (D.field "bedid" D.string)
 
@@ -346,7 +380,7 @@ billDecoder =
     D.map3
         Bill
         (D.field "bill_no" D.string)
-        (D.field "BedAssignments" (D.list bedAssignmentDecoder))
+        (D.field "bookings" (D.list bedAssignmentDecoder))
         (D.field "dereg" D.bool)
 
 
@@ -371,10 +405,10 @@ encodeNewBill bill =
 
 
 encodeBedAssignment : BedAssignment -> E.Value
-encodeBedAssignment ( participant, bedNo ) =
+encodeBedAssignment { participant, bedno } =
     E.object
-        [ ( "short_id", E.string participant.shortid )
-        , ( "bed_id", E.string bedNo )
+        [ ( "short_id", E.string participant.shortId )
+        , ( "bed_id", E.string bedno )
         ]
 
 

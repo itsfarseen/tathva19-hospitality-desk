@@ -3,7 +3,7 @@ module Pages exposing (Page(..), fromUrl, listForNav, toUrl)
 import AppState
 import Browser.Navigation as Nav
 import Url
-import Url.Parser exposing (Parser, map, oneOf, parse, s, top)
+import Url.Parser exposing ((</>), Parser, map, oneOf, parse, s, top)
 
 
 type Page
@@ -11,6 +11,7 @@ type Page
     | Dashboard
     | Logout
     | NotFound
+    | ViewBill { billNo : String }
 
 
 listForNav : AppState.Auth -> List Page
@@ -36,6 +37,9 @@ fromUrl string =
                         [ map Login (s "login")
                         , map Dashboard top
                         , map Logout (s "logout")
+                        , map
+                            (\billNo -> ViewBill { billNo = billNo })
+                            (s "bill" </> Url.Parser.string)
                         ]
             in
             parse parser url
@@ -58,5 +62,8 @@ toUrl page =
 
                 NotFound ->
                     [ "404" ]
+
+                ViewBill { billNo } ->
+                    [ "bill", billNo ]
     in
     "/" ++ String.join "/" pieces
